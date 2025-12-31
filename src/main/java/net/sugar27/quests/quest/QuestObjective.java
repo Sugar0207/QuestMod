@@ -1,4 +1,4 @@
-﻿// root/src/main/java/net/sugar27/quests/quest/QuestObjective.java
+// root/src/main/java/net/sugar27/quests/quest/QuestObjective.java
 
 package net.sugar27.quests.quest;
 
@@ -52,3 +52,5 @@ public record QuestObjective(
         return new QuestObjective(id, logic, criteria);
     }
 }
+
+

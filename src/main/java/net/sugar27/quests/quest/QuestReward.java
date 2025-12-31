@@ -1,4 +1,4 @@
-﻿// root/src/main/java/net/sugar27/quests/quest/QuestReward.java
+// root/src/main/java/net/sugar27/quests/quest/QuestReward.java
 
 package net.sugar27.quests.quest;
 
@@ -162,3 +162,5 @@ public record QuestReward(
         return ResourceLocation.tryParse(Objects.requireNonNull(json.get(key).getAsString()));
     }
 }
+
+

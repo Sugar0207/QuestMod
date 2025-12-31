@@ -1,4 +1,4 @@
-﻿// root/src/main/java/net/sugar27/quests/quest/QuestManager.java
+// root/src/main/java/net/sugar27/quests/quest/QuestManager.java
 
 package net.sugar27.quests.quest;
 
@@ -100,3 +100,5 @@ public final class QuestManager {
         }
     }
 }
+
+

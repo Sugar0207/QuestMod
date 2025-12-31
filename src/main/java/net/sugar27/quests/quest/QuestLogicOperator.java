@@ -1,4 +1,4 @@
-﻿// root/src/main/java/net/sugar27/quests/quest/QuestLogicOperator.java
+// root/src/main/java/net/sugar27/quests/quest/QuestLogicOperator.java
 
 package net.sugar27.quests.quest;
 
@@ -7,3 +7,5 @@ public enum QuestLogicOperator {
     AND,
     OR
 }
+
+

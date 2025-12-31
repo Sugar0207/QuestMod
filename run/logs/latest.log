@@ -1,0 +1,128 @@
+[3112月2025 21:57:34.573] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, neoforgeclientdev, --version, 21.8.52, --assetIndex, 26, --assetsDir, C:\\Users\\hinat\\.gradle\\caches\\neoformruntime\\assets, --fml.fmlVersion, 9.0.18, --fml.mcVersion, 1.21.8, --fml.neoForgeVersion, 21.8.52, --fml.neoFormVersion, 20250717.133445]
+[3112月2025 21:57:34.577] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: JVM identified as Microsoft OpenJDK 64-Bit Server VM 21.0.6+7-LTS
+[3112月2025 21:57:34.579] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 9.0 starting: java version 21.0.6 by Microsoft; OS Windows 11 arch amd64 version 10.0
+[3112月2025 21:57:34.859] [main/INFO] [net.neoforged.fml.loading.ImmediateWindowHandler/]: Loading ImmediateWindowProvider fmlearlywindow
+[3112月2025 21:57:35.708] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=union:/C:/Users/hinat/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.15.2+mixin.0.8.7/2af2f021d8e02a0220dc27a7a72b4666d66d44ca/sponge-mixin-0.15.2+mixin.0.8.7.jar%23157!/ Service=ModLauncher Env=CLIENT
+[3112月2025 21:57:36.125] [fml-loadingscreen/INFO] [net.neoforged.fml.earlydisplay.render.LoadingScreenRenderer/]: GL info: Intel(R) Iris(R) Xe Graphics GL version 3.2.0 - Build 32.0.101.7077, Intel
+[3112月2025 21:57:36.784] [main/INFO] [net.neoforged.fml.loading.moddiscovery.locators.JarInJarDependencyLocator/]: Found 2 dependencies adding them to mods collection
+[3112月2025 21:57:36.789] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/]: 
+     Mod List:
+		Name Version (Mod Id)
+
+		Minecraft 1.21.8 (minecraft)
+		NeoForge 21.8.52 (neoforge)
+		Shuga Quests 0.1.0 (shuga_quests)
+[3112月2025 21:57:38.528] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'neoforgeclientdev' with arguments [--version, 21.8.52, --assetsDir, C:\Users\hinat\.gradle\caches\neoformruntime\assets, --assetIndex, 26]
+[3112月2025 21:57:42.576] [pool-6-thread-1/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.0).
+[3112月2025 21:57:43.046] [Datafixer Bootstrap/INFO] [com.mojang.datafixers.DataFixerBuilder/]: 272 Datafixer optimizations took 1583 milliseconds
+[3112月2025 21:57:53.784] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[3112月2025 21:57:53.788] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[3112月2025 21:57:53.793] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[3112月2025 21:57:53.797] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[3112月2025 21:57:53.800] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[3112月2025 21:57:53.804] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [waypoint, modify, waypoint, color, reset] and [waypoint, modify, waypoint, color, color] with inputs: [reset]
+[3112月2025 21:57:53.945] [modloading-worker-0/INFO] [net.neoforged.neoforge.common.NeoForgeMod/NEOFORGE-MOD]: NeoForge mod loading, version 21.8.52, for MC 1.21.8
+[3112月2025 21:57:54.885] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/C:/Users/hinat/IdeaProjects/QuestMod/build/moddev/artifacts/neoforge-21.8.52.jar%23212!/assets/.mcassetsroot' uses unexpected schema
+[3112月2025 21:57:54.886] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/C:/Users/hinat/IdeaProjects/QuestMod/build/moddev/artifacts/neoforge-21.8.52.jar%23212!/data/.mcassetsroot' uses unexpected schema
+[3112月2025 21:57:54.937] [Render thread/INFO] [com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService/]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[3112月2025 21:57:54.955] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Setting user: Dev
+[3112月2025 21:57:55.300] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Backend library: LWJGL version 3.3.3+5
+[3112月2025 21:57:55.543] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Using optional rendering extensions: GL_ARB_buffer_storage, GL_KHR_debug, GL_ARB_vertex_attrib_binding, GL_ARB_direct_state_access
+[3112月2025 21:57:56.912] [Render thread/INFO] [net.minecraft.server.packs.resources.ReloadableResourceManager/]: Reloading ResourceManager: vanilla, mod_resources, mod/shuga_quests, mod/neoforge
+[3112月2025 21:57:56.933] [resourceLoad/INFO] [net.sugar27.quests.ShugaQuestsMod/]: Shuga Quests common setup complete
+[3112月2025 21:57:57.154] [resourceLoad/INFO] [net.minecraft.client.gui.font.providers.UnihexProvider/]: Found unifont_pua-16.0.03.hex, loading
+[3112月2025 21:57:57.154] [resourceLoad/INFO] [net.minecraft.client.gui.font.providers.UnihexProvider/]: Found unifont_all_no_pua-16.0.03.hex, loading
+[3112月2025 21:57:58.187] [resourceLoad/INFO] [net.minecraft.client.gui.font.providers.UnihexProvider/]: Found unifont_jp_patch-16.0.03.hex, loading
+[3112月2025 21:58:01.008] [Render thread/INFO] [com.mojang.blaze3d.audio.Library/]: OpenAL initialized on device OpenAL Soft on スピーカー (Realtek(R) Audio)
+[3112月2025 21:58:01.010] [Render thread/INFO] [net.minecraft.client.sounds.SoundEngine/SOUNDS]: Sound engine started
+[3112月2025 21:58:01.190] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x512x4 minecraft:textures/atlas/blocks.png-atlas
+[3112月2025 21:58:02.472] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x4 minecraft:textures/atlas/signs.png-atlas
+[3112月2025 21:58:02.496] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x4 minecraft:textures/atlas/shield_patterns.png-atlas
+[3112月2025 21:58:02.548] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x4 minecraft:textures/atlas/banner_patterns.png-atlas
+[3112月2025 21:58:02.606] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 2048x1024x4 minecraft:textures/atlas/armor_trims.png-atlas
+[3112月2025 21:58:03.055] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 128x64x4 minecraft:textures/atlas/decorated_pot.png-atlas
+[3112月2025 21:58:03.077] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x4 minecraft:textures/atlas/chest.png-atlas
+[3112月2025 21:58:03.088] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x4 minecraft:textures/atlas/shulker_boxes.png-atlas
+[3112月2025 21:58:03.106] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x4 minecraft:textures/atlas/beds.png-atlas
+[3112月2025 21:58:03.125] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 64x64x0 minecraft:textures/atlas/map_decorations.png-atlas
+[3112月2025 21:58:03.135] [Render thread/INFO] [net.neoforged.neoforge.client.entity.animation.json.AnimationLoader/]: Loaded 0 entity animations
+[3112月2025 21:58:03.442] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x0 minecraft:textures/atlas/particles.png-atlas
+[3112月2025 21:58:03.483] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x0 minecraft:textures/atlas/paintings.png-atlas
+[3112月2025 21:58:03.494] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x512x0 minecraft:textures/atlas/gui.png-atlas
+[3112月2025 21:58:10.150] [Render thread/INFO] [net.minecraft.world.item.crafting.RecipeManager/]: Loaded 1407 recipes
+[3112月2025 21:58:10.179] [Render thread/INFO] [net.minecraft.advancements.AdvancementTree/]: Loaded 1520 advancements
+[3112月2025 21:58:10.183] [Render thread/INFO] [net.neoforged.neoforge.common.crafting.RecipePriorityManager/]: Loaded 0 recipe priority overrides
+[3112月2025 21:58:10.641] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Starting integrated minecraft server version 1.21.8
+[3112月2025 21:58:10.641] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Generating keypair
+[3112月2025 21:58:11.719] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Preparing start region for dimension minecraft:overworld
+[3112月2025 21:58:14.412] [progressListener/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: スポーン地点を準備中：0%
+[3112月2025 21:58:14.412] [progressListener/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: スポーン地点を準備中：0%
+[3112月2025 21:58:14.412] [progressListener/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: スポーン地点を準備中：0%
+[3112月2025 21:58:14.412] [progressListener/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: スポーン地点を準備中：0%
+[3112月2025 21:58:14.412] [progressListener/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: スポーン地点を準備中：0%
+[3112月2025 21:58:14.414] [progressListener/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: スポーン地点を準備中：0%
+[3112月2025 21:58:14.705] [Server thread/INFO] [net.neoforged.neoforge.server.permission.PermissionAPI/]: Successfully initialized permission handler neoforge:default_handler
+[3112月2025 21:58:14.713] [progressListener/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Time elapsed: 2818 ms
+[3112月2025 21:58:14.713] [Server thread/INFO] [net.sugar27.quests.ShugaQuestsMod/]: Loaded 0 quests
+[3112月2025 21:58:14.980] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Changing view distance to 12, from 10
+[3112月2025 21:58:14.981] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Changing simulation distance to 12, from 0
+[3112月2025 21:58:17.077] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: Dev[local:E:e9bdf74d] logged in with entity id 91 at (126.69999998807907, 70.0279942947919, -596.8356638020858)
+[3112月2025 21:58:17.277] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Devがゲームに参加しました
+[3112月2025 21:58:17.922] [Render thread/INFO] [net.minecraft.client.renderer.DynamicUniformStorage/]: Resizing Dynamic Transforms UBO, capacity limit of 2 reached during a single frame. New capacity will be 4.
+[3112月2025 21:58:17.989] [Render thread/INFO] [net.minecraft.advancements.AdvancementTree/]: Loaded 2 advancements
+[3112月2025 21:58:18.225] [Render thread/INFO] [net.minecraft.client.renderer.DynamicUniformStorage/]: Resizing Dynamic Transforms UBO, capacity limit of 4 reached during a single frame. New capacity will be 8.
+[3112月2025 21:58:18.630] [Render thread/INFO] [net.minecraft.client.renderer.DynamicUniformStorage/]: Resizing Dynamic Transforms UBO, capacity limit of 8 reached during a single frame. New capacity will be 16.
+[3112月2025 21:58:18.864] [Render thread/INFO] [net.minecraft.client.renderer.DynamicUniformStorage/]: Resizing Dynamic Transforms UBO, capacity limit of 16 reached during a single frame. New capacity will be 32.
+[3112月2025 21:58:19.026] [Render thread/INFO] [net.minecraft.client.renderer.DynamicUniformStorage/]: Resizing Dynamic Transforms UBO, capacity limit of 32 reached during a single frame. New capacity will be 64.
+[3112月2025 21:58:19.274] [Render thread/INFO] [net.minecraft.client.renderer.DynamicUniformStorage/]: Resizing Dynamic Transforms UBO, capacity limit of 64 reached during a single frame. New capacity will be 128.
+[3112月2025 21:58:19.673] [Render thread/INFO] [net.minecraft.client.renderer.DynamicUniformStorage/]: Resizing Dynamic Transforms UBO, capacity limit of 128 reached during a single frame. New capacity will be 256.
+[3112月2025 21:58:20.320] [Render thread/ERROR] [net.minecraft.client.Minecraft/FATAL]: Reported exception thrown!
+net.minecraft.ReportedException: Rendering screen
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.renderer.GameRenderer.render(GameRenderer.java:535) ~[neoforge-21.8.52.jar%23212!/:?]
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.Minecraft.runTick(Minecraft.java:1291) ~[neoforge-21.8.52.jar%23212!/:?]
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.Minecraft.run(Minecraft.java:888) ~[neoforge-21.8.52.jar%23212!/:?]
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.main.Main.main(Main.java:243) ~[neoforge-21.8.52.jar%23212!/:?]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[?:?]
+	at MC-BOOTSTRAP/fml_loader@9.0.18/net.neoforged.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:132) ~[loader-9.0.18.jar%23167!/:9.0]
+	at MC-BOOTSTRAP/fml_loader@9.0.18/net.neoforged.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:120) ~[loader-9.0.18.jar%23167!/:9.0]
+	at MC-BOOTSTRAP/fml_loader@9.0.18/net.neoforged.fml.loading.targets.NeoForgeClientDevLaunchHandler.runService(NeoForgeClientDevLaunchHandler.java:49) ~[loader-9.0.18.jar%23167!/:9.0]
+	at MC-BOOTSTRAP/fml_loader@9.0.18/net.neoforged.fml.loading.targets.CommonLaunchHandler.lambda$launchService$4(CommonLaunchHandler.java:114) ~[loader-9.0.18.jar%23167!/:9.0]
+	at MC-BOOTSTRAP/fml_loader@9.0.18/cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:25) [loader-9.0.18.jar%23167!/:9.0]
+	at MC-BOOTSTRAP/fml_loader@9.0.18/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:55) [loader-9.0.18.jar%23167!/:9.0]
+	at MC-BOOTSTRAP/fml_loader@9.0.18/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:73) [loader-9.0.18.jar%23167!/:9.0]
+	at MC-BOOTSTRAP/fml_loader@9.0.18/cpw.mods.modlauncher.Launcher.run(Launcher.java:104) [loader-9.0.18.jar%23167!/:9.0]
+	at MC-BOOTSTRAP/fml_loader@9.0.18/cpw.mods.modlauncher.Launcher.main(Launcher.java:75) [loader-9.0.18.jar%23167!/:9.0]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[?:?]
+	at cpw.mods.bootstraplauncher/cpw.mods.bootstraplauncher.BootstrapLauncher.run(BootstrapLauncher.java:203) [bootstraplauncher-9.0.18.jar:?]
+	at cpw.mods.bootstraplauncher/cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:62) [bootstraplauncher-9.0.18.jar:?]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[?:?]
+	at net.neoforged.devlaunch.Main.main(Main.java:57) [DevLaunch-1.0.2.jar:?]
+Caused by: java.lang.IllegalStateException: Can only blur once per frame
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.gui.render.state.GuiRenderState.blurBeforeThisStratum(GuiRenderState.java:37) ~[neoforge-21.8.52.jar%23212!/:?]
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.gui.GuiGraphics.blurBeforeThisStratum(GuiGraphics.java:110) ~[neoforge-21.8.52.jar%23212!/:?]
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.gui.screens.Screen.renderBlurredBackground(Screen.java:425) ~[neoforge-21.8.52.jar%23212!/:?]
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.gui.screens.Screen.renderBackground(Screen.java:418) ~[neoforge-21.8.52.jar%23212!/:?]
+	at TRANSFORMER/shuga_quests@0.1.0/net.sugar27.quests.client.gui.QuestScreen.render(QuestScreen.java:74) ~[%23214!/:?]
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.gui.screens.Screen.renderWithTooltip(Screen.java:112) ~[neoforge-21.8.52.jar%23212!/:?]
+	at TRANSFORMER/neoforge@21.8.52/net.neoforged.neoforge.client.ClientHooks.drawScreenInternal(ClientHooks.java:409) ~[neoforge-21.8.52.jar%23213!/:?]
+	at TRANSFORMER/neoforge@21.8.52/net.neoforged.neoforge.client.ClientHooks.drawScreen(ClientHooks.java:404) ~[neoforge-21.8.52.jar%23213!/:?]
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.renderer.GameRenderer.render(GameRenderer.java:529) ~[neoforge-21.8.52.jar%23212!/:?]
+	... 21 more
+[3112月2025 21:58:20.854] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Stopping server
+[3112月2025 21:58:20.858] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving players
+[3112月2025 21:58:20.903] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: Dev lost connection: サーバーが閉鎖されました
+[3112月2025 21:58:20.904] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Devがゲームを退出しました
+[3112月2025 21:58:20.935] [Server thread/INFO] [net.minecraft.server.network.ServerCommonPacketListenerImpl/]: Stopping singleplayer server as player logged out
+[3112月2025 21:58:20.935] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving worlds
+[3112月2025 21:58:21.199] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[新規ワールド]'/minecraft:overworld
+[3112月2025 21:58:21.893] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[新規ワールド]'/minecraft:the_nether
+[3112月2025 21:58:21.902] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[新規ワールド]'/minecraft:the_end
+[3112月2025 21:58:21.921] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (新規ワールド): All chunks are saved
+[3112月2025 21:58:21.921] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[3112月2025 21:58:21.921] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[3112月2025 21:58:21.921] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage: All dimensions are saved
+[3112月2025 21:58:22.156] [Render thread/FATAL] [net.neoforged.neoforge.common.NeoForgeMod/]: Preparing crash report with UUID 269e29df-a38c-48bd-aac9-f6ed5f3c972c
+[3112月2025 21:58:22.185] [Render thread/FATAL] [net.neoforged.neoforge.common.NeoForgeMod/]: Preparing crash report with UUID 0af56814-a2cf-4005-a88d-ef3662bfdb03

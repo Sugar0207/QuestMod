@@ -1,4 +1,4 @@
-﻿// root/src/main/java/net/sugar27/quests/quest/QuestRewardType.java
+// root/src/main/java/net/sugar27/quests/quest/QuestRewardType.java
 
 package net.sugar27.quests.quest;
 
@@ -25,3 +25,5 @@ public enum QuestRewardType {
         };
     }
 }
+
+

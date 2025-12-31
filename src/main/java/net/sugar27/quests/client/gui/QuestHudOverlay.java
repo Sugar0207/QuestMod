@@ -1,4 +1,4 @@
-﻿// root/src/main/java/net/sugar27/quests/client/gui/QuestHudOverlay.java
+// root/src/main/java/net/sugar27/quests/client/gui/QuestHudOverlay.java
 
 package net.sugar27.quests.client.gui;
 
@@ -54,3 +54,5 @@ public final class QuestHudOverlay {
         graphics.drawString(Objects.requireNonNull(minecraft.font), Objects.requireNonNull(questTitle), x - minecraft.font.width(Objects.requireNonNull(questTitle)), y + 12, 0xFFFFFF);
     }
 }
+
+

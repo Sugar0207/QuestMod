@@ -1,4 +1,4 @@
-﻿// root/src/main/java/net/sugar27/quests/client/KeyBindings.java
+// root/src/main/java/net/sugar27/quests/client/KeyBindings.java
 
 package net.sugar27.quests.client;
 
@@ -40,3 +40,5 @@ public final class KeyBindings {
         }
     }
 }
+
+

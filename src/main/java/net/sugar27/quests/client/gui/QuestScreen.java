@@ -1,4 +1,4 @@
-﻿// root/src/main/java/net/sugar27/quests/client/gui/QuestScreen.java
+// root/src/main/java/net/sugar27/quests/client/gui/QuestScreen.java
 
 package net.sugar27.quests.client.gui;
 
@@ -71,7 +71,16 @@ public class QuestScreen extends Screen {
     // Render the quest list and detail panel.
     @Override
     public void render(@Nonnull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(graphics, mouseX, mouseY, partialTick);
+        // Call super.render first so that the screen background and widgets are
+        // rendered by the parent implementation. Some vanilla implementations
+        // may also trigger the background blur; calling renderBackground here
+        // in addition to the parent's rendering can cause the blur to be
+        // applied multiple times in one frame and crash with
+        // "Can only blur once per frame". To avoid double-blur, avoid an
+        // explicit background call here and draw our UI on top of the
+        // parent's rendering.
+        super.render(graphics, mouseX, mouseY, partialTick);
+
         Font font = Objects.requireNonNull(this.font);
         graphics.drawCenteredString(font, Objects.requireNonNull(this.title), this.width / 2, 6, 0xFFFFFF);
 
@@ -88,7 +97,6 @@ public class QuestScreen extends Screen {
         }
 
         renderDetails(graphics, mouseX, mouseY);
-        super.render(graphics, mouseX, mouseY, partialTick);
     }
 
     // Render the detail panel for the selected quest.
@@ -179,3 +187,5 @@ public class QuestScreen extends Screen {
         return false;
     }
 }
+
+

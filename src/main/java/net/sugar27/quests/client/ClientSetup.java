@@ -1,4 +1,4 @@
-﻿// root/src/main/java/net/sugar27/quests/client/ClientSetup.java
+// root/src/main/java/net/sugar27/quests/client/ClientSetup.java
 
 package net.sugar27.quests.client;
 
@@ -19,3 +19,5 @@ public final class ClientSetup {
         NeoForge.EVENT_BUS.addListener(QuestHudOverlay::onRenderGui);
     }
 }
+
+

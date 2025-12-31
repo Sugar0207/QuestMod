@@ -1,0 +1,10 @@
+{
+    "java.jdt.ls.java.home": "/path/to/your/jdk-21",
+    "java.configuration.runtimes": [
+        {
+            "name": "JavaSE-21",
+            "path": "/path/to/your/jdk-21"
+        }
+    ],
+    "java.compile.nullAnalysis.mode": "automatic"
+}

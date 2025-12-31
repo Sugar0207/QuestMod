@@ -1,4 +1,4 @@
-﻿// root/src/main/java/net/sugar27/quests/quest/QuestEventContext.java
+// root/src/main/java/net/sugar27/quests/quest/QuestEventContext.java
 
 package net.sugar27.quests.quest;
 
@@ -18,3 +18,5 @@ public record QuestEventContext(
         double z
 ) {
 }
+
+

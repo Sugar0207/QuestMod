@@ -1,4 +1,4 @@
-﻿// root/src/main/java/net/sugar27/quests/quest/QuestDefinition.java
+// root/src/main/java/net/sugar27/quests/quest/QuestDefinition.java
 
 package net.sugar27.quests.quest;
 
@@ -86,3 +86,5 @@ public record QuestDefinition(
         return new QuestDefinition(id, titleKey, descriptionKey, category, type, repeatable, objectives, rewards);
     }
 }
+
+

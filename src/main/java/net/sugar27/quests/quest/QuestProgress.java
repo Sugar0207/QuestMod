@@ -1,4 +1,4 @@
-﻿// root/src/main/java/net/sugar27/quests/quest/QuestProgress.java
+// root/src/main/java/net/sugar27/quests/quest/QuestProgress.java
 
 package net.sugar27.quests.quest;
 
@@ -209,3 +209,5 @@ public class QuestProgress {
         }
     }
 }
+
+

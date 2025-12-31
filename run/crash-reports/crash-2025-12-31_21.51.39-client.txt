@@ -1,0 +1,216 @@
+---- Minecraft Crash Report ----
+// Shall we play a game?
+
+Time: 2025-12-31 21:51:39
+Description: Rendering screen
+
+java.lang.IllegalStateException: Can only blur once per frame
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.gui.render.state.GuiRenderState.blurBeforeThisStratum(GuiRenderState.java:37) ~[neoforge-21.8.52.jar%23212!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.gui.GuiGraphics.blurBeforeThisStratum(GuiGraphics.java:110) ~[neoforge-21.8.52.jar%23212!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.gui.screens.Screen.renderBlurredBackground(Screen.java:425) ~[neoforge-21.8.52.jar%23212!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.gui.screens.Screen.renderBackground(Screen.java:418) ~[neoforge-21.8.52.jar%23212!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/shuga_quests@0.1.0/net.sugar27.quests.client.gui.QuestScreen.render(QuestScreen.java:74) ~[%23214!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.gui.screens.Screen.renderWithTooltip(Screen.java:112) ~[neoforge-21.8.52.jar%23212!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/neoforge@21.8.52/net.neoforged.neoforge.client.ClientHooks.drawScreenInternal(ClientHooks.java:409) ~[neoforge-21.8.52.jar%23213!/:?] {re:classloading}
+	at TRANSFORMER/neoforge@21.8.52/net.neoforged.neoforge.client.ClientHooks.drawScreen(ClientHooks.java:404) ~[neoforge-21.8.52.jar%23213!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.renderer.GameRenderer.render(GameRenderer.java:529) ~[neoforge-21.8.52.jar%23212!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.Minecraft.runTick(Minecraft.java:1291) [neoforge-21.8.52.jar%23212!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.Minecraft.run(Minecraft.java:888) [neoforge-21.8.52.jar%23212!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.main.Main.main(Main.java:243) [neoforge-21.8.52.jar%23212!/:?] {re:classloading}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[?:?] {}
+	at MC-BOOTSTRAP/fml_loader@9.0.18/net.neoforged.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:132) [loader-9.0.18.jar%23167!/:9.0] {}
+	at MC-BOOTSTRAP/fml_loader@9.0.18/net.neoforged.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:120) [loader-9.0.18.jar%23167!/:9.0] {}
+	at MC-BOOTSTRAP/fml_loader@9.0.18/net.neoforged.fml.loading.targets.NeoForgeClientDevLaunchHandler.runService(NeoForgeClientDevLaunchHandler.java:49) [loader-9.0.18.jar%23167!/:9.0] {}
+	at MC-BOOTSTRAP/fml_loader@9.0.18/net.neoforged.fml.loading.targets.CommonLaunchHandler.lambda$launchService$4(CommonLaunchHandler.java:114) [loader-9.0.18.jar%23167!/:9.0] {}
+	at MC-BOOTSTRAP/fml_loader@9.0.18/cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:25) [loader-9.0.18.jar%23167!/:9.0] {}
+	at MC-BOOTSTRAP/fml_loader@9.0.18/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:55) [loader-9.0.18.jar%23167!/:9.0] {}
+	at MC-BOOTSTRAP/fml_loader@9.0.18/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:73) [loader-9.0.18.jar%23167!/:9.0] {}
+	at MC-BOOTSTRAP/fml_loader@9.0.18/cpw.mods.modlauncher.Launcher.run(Launcher.java:104) [loader-9.0.18.jar%23167!/:9.0] {}
+	at MC-BOOTSTRAP/fml_loader@9.0.18/cpw.mods.modlauncher.Launcher.main(Launcher.java:75) [loader-9.0.18.jar%23167!/:9.0] {}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[?:?] {}
+	at cpw.mods.bootstraplauncher/cpw.mods.bootstraplauncher.BootstrapLauncher.run(BootstrapLauncher.java:203) [bootstraplauncher-9.0.18.jar:?] {}
+	at cpw.mods.bootstraplauncher/cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:62) [bootstraplauncher-9.0.18.jar:?] {}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[?:?] {}
+	at net.neoforged.devlaunch.Main.main(Main.java:57) [DevLaunch-1.0.2.jar:?] {}
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Thread: Render thread
+Stacktrace:
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.gui.render.state.GuiRenderState.blurBeforeThisStratum(GuiRenderState.java:37) ~[neoforge-21.8.52.jar%23212!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.gui.GuiGraphics.blurBeforeThisStratum(GuiGraphics.java:110) ~[neoforge-21.8.52.jar%23212!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.gui.screens.Screen.renderBlurredBackground(Screen.java:425) ~[neoforge-21.8.52.jar%23212!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.gui.screens.Screen.renderBackground(Screen.java:418) ~[neoforge-21.8.52.jar%23212!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/shuga_quests@0.1.0/net.sugar27.quests.client.gui.QuestScreen.render(QuestScreen.java:74) ~[%23214!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.gui.screens.Screen.renderWithTooltip(Screen.java:112) ~[neoforge-21.8.52.jar%23212!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/neoforge@21.8.52/net.neoforged.neoforge.client.ClientHooks.drawScreenInternal(ClientHooks.java:409) ~[neoforge-21.8.52.jar%23213!/:?] {re:classloading}
+	at TRANSFORMER/neoforge@21.8.52/net.neoforged.neoforge.client.ClientHooks.drawScreen(ClientHooks.java:404) ~[neoforge-21.8.52.jar%23213!/:?] {re:classloading}
+-- Screen render details --
+Details:
+	Screen name: net.sugar27.quests.client.gui.QuestScreen
+	Mouse location: Scaled: (240.000000, 126.374628). Absolute: (960.000000, 504.000000)
+	Screen size: ~~ERROR~~ IllegalFormatConversionException: f != java.lang.Integer
+Stacktrace:
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.renderer.GameRenderer.render(GameRenderer.java:529) ~[neoforge-21.8.52.jar%23212!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.Minecraft.runTick(Minecraft.java:1291) [neoforge-21.8.52.jar%23212!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.Minecraft.run(Minecraft.java:888) [neoforge-21.8.52.jar%23212!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.main.Main.main(Main.java:243) [neoforge-21.8.52.jar%23212!/:?] {re:classloading}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[?:?] {}
+	at MC-BOOTSTRAP/fml_loader@9.0.18/net.neoforged.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:132) [loader-9.0.18.jar%23167!/:9.0] {}
+	at MC-BOOTSTRAP/fml_loader@9.0.18/net.neoforged.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:120) [loader-9.0.18.jar%23167!/:9.0] {}
+	at MC-BOOTSTRAP/fml_loader@9.0.18/net.neoforged.fml.loading.targets.NeoForgeClientDevLaunchHandler.runService(NeoForgeClientDevLaunchHandler.java:49) [loader-9.0.18.jar%23167!/:9.0] {}
+	at MC-BOOTSTRAP/fml_loader@9.0.18/net.neoforged.fml.loading.targets.CommonLaunchHandler.lambda$launchService$4(CommonLaunchHandler.java:114) [loader-9.0.18.jar%23167!/:9.0] {}
+	at MC-BOOTSTRAP/fml_loader@9.0.18/cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:25) [loader-9.0.18.jar%23167!/:9.0] {}
+	at MC-BOOTSTRAP/fml_loader@9.0.18/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:55) [loader-9.0.18.jar%23167!/:9.0] {}
+	at MC-BOOTSTRAP/fml_loader@9.0.18/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:73) [loader-9.0.18.jar%23167!/:9.0] {}
+	at MC-BOOTSTRAP/fml_loader@9.0.18/cpw.mods.modlauncher.Launcher.run(Launcher.java:104) [loader-9.0.18.jar%23167!/:9.0] {}
+	at MC-BOOTSTRAP/fml_loader@9.0.18/cpw.mods.modlauncher.Launcher.main(Launcher.java:75) [loader-9.0.18.jar%23167!/:9.0] {}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[?:?] {}
+	at cpw.mods.bootstraplauncher/cpw.mods.bootstraplauncher.BootstrapLauncher.run(BootstrapLauncher.java:203) [bootstraplauncher-9.0.18.jar:?] {}
+	at cpw.mods.bootstraplauncher/cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:62) [bootstraplauncher-9.0.18.jar:?] {}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[?:?] {}
+	at net.neoforged.devlaunch.Main.main(Main.java:57) [DevLaunch-1.0.2.jar:?] {}
+
+
+-- Uptime --
+Details:
+	JVM uptime: 231.849s
+	Wall uptime: 207.290s
+	High-res time: 226.495s
+	Client ticks: 3690 ticks / 184.500s
+Stacktrace:
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.Minecraft.fillReport(Minecraft.java:2347) [neoforge-21.8.52.jar%23212!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.Minecraft.emergencySaveAndCrash(Minecraft.java:952) [neoforge-21.8.52.jar%23212!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.Minecraft.run(Minecraft.java:908) [neoforge-21.8.52.jar%23212!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.8/net.minecraft.client.main.Main.main(Main.java:243) [neoforge-21.8.52.jar%23212!/:?] {re:classloading}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[?:?] {}
+	at MC-BOOTSTRAP/fml_loader@9.0.18/net.neoforged.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:132) [loader-9.0.18.jar%23167!/:9.0] {}
+	at MC-BOOTSTRAP/fml_loader@9.0.18/net.neoforged.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:120) [loader-9.0.18.jar%23167!/:9.0] {}
+	at MC-BOOTSTRAP/fml_loader@9.0.18/net.neoforged.fml.loading.targets.NeoForgeClientDevLaunchHandler.runService(NeoForgeClientDevLaunchHandler.java:49) [loader-9.0.18.jar%23167!/:9.0] {}
+	at MC-BOOTSTRAP/fml_loader@9.0.18/net.neoforged.fml.loading.targets.CommonLaunchHandler.lambda$launchService$4(CommonLaunchHandler.java:114) [loader-9.0.18.jar%23167!/:9.0] {}
+	at MC-BOOTSTRAP/fml_loader@9.0.18/cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:25) [loader-9.0.18.jar%23167!/:9.0] {}
+	at MC-BOOTSTRAP/fml_loader@9.0.18/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:55) [loader-9.0.18.jar%23167!/:9.0] {}
+	at MC-BOOTSTRAP/fml_loader@9.0.18/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:73) [loader-9.0.18.jar%23167!/:9.0] {}
+	at MC-BOOTSTRAP/fml_loader@9.0.18/cpw.mods.modlauncher.Launcher.run(Launcher.java:104) [loader-9.0.18.jar%23167!/:9.0] {}
+	at MC-BOOTSTRAP/fml_loader@9.0.18/cpw.mods.modlauncher.Launcher.main(Launcher.java:75) [loader-9.0.18.jar%23167!/:9.0] {}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[?:?] {}
+	at cpw.mods.bootstraplauncher/cpw.mods.bootstraplauncher.BootstrapLauncher.run(BootstrapLauncher.java:203) [bootstraplauncher-9.0.18.jar:?] {}
+	at cpw.mods.bootstraplauncher/cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:62) [bootstraplauncher-9.0.18.jar:?] {}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[?:?] {}
+	at net.neoforged.devlaunch.Main.main(Main.java:57) [DevLaunch-1.0.2.jar:?] {}
+
+
+-- Affected level --
+Details:
+	All players: 1 total; LocalPlayer{name=Dev, id=5, pos=(126.69999998807907, 70.0279942947919, -596.8356638020858), mode=CREATIVE, permission=4}
+	Chunk stats: 961, 637
+	Level dimension: minecraft:overworld
+	Level spawn location: World: (112,68,-608), Section: (at 0,4,0 in 7,4,-38; chunk contains blocks 112,-64,-608 to 127,319,-593), Region: (0,-2; contains chunks 0,-64 to 31,-33, blocks 0,-64,-1024 to 511,319,-513)
+	Level time: 2646 game time, 2646 day time
+	Server brand: neoforge
+	Server type: Integrated singleplayer server
+	Tracked entity count: 145
+
+-- Last reload --
+Details:
+	Reload number: 2
+	Reload reason: manual
+	Finished: Yes
+	Packs: vanilla, mod_resources, mod/shuga_quests, mod/neoforge
+
+-- System Details --
+Details:
+	Minecraft Version: 1.21.8
+	Minecraft Version ID: 1.21.8
+	Operating System: Windows 11 (amd64) version 10.0
+	Java Version: 24.0.2, Oracle Corporation
+	Java VM Version: OpenJDK 64-Bit Server VM (mixed mode, sharing), Oracle Corporation
+	Memory: 236530264 bytes (225 MiB) / 1094713344 bytes (1044 MiB) up to 4227858432 bytes (4032 MiB)
+	CPUs: 8
+	Processor Vendor: GenuineIntel
+	Processor Name: 11th Gen Intel(R) Core(TM) i5-11320H @ 3.20GHz
+	Identifier: Intel64 Family 6 Model 140 Stepping 2
+	Microarchitecture: Tiger Lake
+	Frequency (GHz): 2.50
+	Number of physical packages: 1
+	Number of physical CPUs: 4
+	Number of logical CPUs: 8
+	Graphics card #0 name: Intel(R) Iris(R) Xe Graphics
+	Graphics card #0 vendor: Intel Corporation
+	Graphics card #0 VRAM (MiB): 2048.00
+	Graphics card #0 deviceId: VideoController1
+	Graphics card #0 versionInfo: 32.0.101.7077
+	Memory slot #0 capacity (MiB): 8192.00
+	Memory slot #0 clockSpeed (GHz): 3.20
+	Memory slot #0 type: DDR4
+	Memory slot #1 capacity (MiB): 8192.00
+	Memory slot #1 clockSpeed (GHz): 3.20
+	Memory slot #1 type: DDR4
+	Virtual memory max (MiB): 37419.93
+	Virtual memory used (MiB): 36031.70
+	Swap memory total (MiB): 21297.14
+	Swap memory used (MiB): 4251.34
+	Space in storage for jna.tmpdir (MiB): <path not set>
+	Space in storage for org.lwjgl.system.SharedLibraryExtractPath (MiB): <path not set>
+	Space in storage for io.netty.native.workdir (MiB): <path not set>
+	Space in storage for java.io.tmpdir (MiB): available: 14044.00, total: 227177.00
+	Space in storage for workdir (MiB): available: 14044.00, total: 227177.00
+	JVM Flags: 0 total; 
+	Launched Version: 21.8.52
+	Backend library: LWJGL version 3.3.3+5
+	Backend API: Intel(R) Iris(R) Xe Graphics GL version 3.2.0 - Build 32.0.101.7077, Intel
+	Window size: 1920x1009
+	GFLW Platform: win32
+	Render Extensions: GL_ARB_buffer_storage, GL_KHR_debug, GL_ARB_vertex_attrib_binding, GL_ARB_direct_state_access
+	GL debug messages: 
+	Is Modded: Definitely; Client brand changed to 'neoforge'; Server brand changed to 'neoforge'
+	Universe: 400921fb54442d18
+	Type: Integrated Server (map_client.txt)
+	Graphics mode: fancy
+	Render Distance: 12/12 chunks
+	Resource Packs: vanilla, mod_resources, mod/shuga_quests, mod/neoforge
+	Current Language: ja_jp
+	Locale: ja_JP
+	System encoding: MS932
+	File encoding: UTF-8
+	CPU: 8x 11th Gen Intel(R) Core(TM) i5-11320H @ 3.20GHz
+	Server Running: true
+	Player Count: 1 / 8; [ServerPlayer['Dev'/5, l='ServerLevel[新規ワールド]', x=126.70, y=70.03, z=-596.84]]
+	Active Data Packs: vanilla, mod_data, mod/shuga_quests, mod/neoforge
+	Available Data Packs: minecart_improvements, redstone_experiments, trade_rebalance, vanilla, mod/neoforge, mod/shuga_quests, mod_data
+	Enabled Feature Flags: minecraft:vanilla
+	World Generation: Stable
+	World Seed: 6447065048799659464
+	Suppressed Exceptions: ~~NONE~~
+	ModLauncher: 9.0
+	ModLauncher launch target: neoforgeclientdev
+	ModLauncher services: 
+		sponge-mixin-0.15.2+mixin.0.8.7.jar mixin PLUGINSERVICE 
+		loader-9.0.18.jar neoforgedevdistcleaner PLUGINSERVICE 
+		loader-9.0.18.jar slf4jfixer PLUGINSERVICE 
+		loader-9.0.18.jar runtime_enum_extender PLUGINSERVICE 
+		loader-9.0.18.jar accesstransformer PLUGINSERVICE 
+		loader-9.0.18.jar mixin TRANSFORMATIONSERVICE 
+		loader-9.0.18.jar fml TRANSFORMATIONSERVICE 
+	FML Language Providers: 
+		javafml@9.0
+		minecraft@9.0
+	Mod List: 
+		neoforge-21.8.52.jar                              |Minecraft                     |minecraft                     |1.21.8              |Manifest: NOSIGNATURE
+		neoforge-21.8.52.jar                              |NeoForge                      |neoforge                      |21.8.52             |Manifest: NOSIGNATURE
+		main                                              |Shuga Quests                  |shuga_quests                  |0.1.0               |Manifest: NOSIGNATURE
+	Crash Report UUID: b0ca62e3-1803-4908-914b-e822504c075d
+	FML: 9.0.18
+	NeoForge: 21.8.52

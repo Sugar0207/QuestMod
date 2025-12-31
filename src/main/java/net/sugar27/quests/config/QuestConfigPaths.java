@@ -1,4 +1,4 @@
-﻿// root/src/main/java/net/sugar27/quests/config/QuestConfigPaths.java
+// root/src/main/java/net/sugar27/quests/config/QuestConfigPaths.java
 
 package net.sugar27.quests.config;
 
@@ -29,3 +29,5 @@ public final class QuestConfigPaths {
         return getRootDir().resolve("daily");
     }
 }
+
+

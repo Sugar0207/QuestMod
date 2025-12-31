@@ -1,4 +1,4 @@
-﻿// root/src/main/java/net/sugar27/quests/network/NetworkHandler.java
+// root/src/main/java/net/sugar27/quests/network/NetworkHandler.java
 
 package net.sugar27.quests.network;
 
@@ -56,3 +56,5 @@ public final class NetworkHandler {
         PacketDistributor.sendToPlayer(Objects.requireNonNull(player), payload);
     }
 }
+
+

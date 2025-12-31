@@ -1,4 +1,4 @@
-﻿// root/src/main/java/net/sugar27/quests/quest/QuestProgressManager.java
+// root/src/main/java/net/sugar27/quests/quest/QuestProgressManager.java
 
 package net.sugar27.quests.quest;
 
@@ -265,3 +265,5 @@ public final class QuestProgressManager {
         }
     }
 }
+
+

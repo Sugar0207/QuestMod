@@ -1,4 +1,4 @@
-﻿// root/src/main/java/net/sugar27/quests/ShugaQuestsMod.java
+// root/src/main/java/net/sugar27/quests/ShugaQuestsMod.java
 
 package net.sugar27.quests;
 
@@ -45,3 +45,5 @@ public class ShugaQuestsMod {
         LOGGER.info("Shuga Quests common setup complete");
     }
 }
+
+

@@ -1,4 +1,4 @@
-﻿// root/src/main/java/net/sugar27/quests/network/QuestSyncPacket.java
+// root/src/main/java/net/sugar27/quests/network/QuestSyncPacket.java
 
 package net.sugar27.quests.network;
 
@@ -96,3 +96,5 @@ public record QuestSyncPacket(
         return TYPE;
     }
 }
+
+

@@ -1,4 +1,4 @@
-﻿// root/src/main/java/net/sugar27/quests/quest/QuestCategory.java
+// root/src/main/java/net/sugar27/quests/quest/QuestCategory.java
 
 package net.sugar27.quests.quest;
 
@@ -23,3 +23,5 @@ public enum QuestCategory {
         };
     }
 }
+
+

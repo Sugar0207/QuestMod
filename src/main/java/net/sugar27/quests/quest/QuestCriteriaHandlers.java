@@ -1,4 +1,4 @@
-﻿// root/src/main/java/net/sugar27/quests/quest/QuestCriteriaHandlers.java
+// root/src/main/java/net/sugar27/quests/quest/QuestCriteriaHandlers.java
 
 package net.sugar27.quests.quest;
 
@@ -79,3 +79,5 @@ public final class QuestCriteriaHandlers {
         return Math.max(1, context.count());
     }
 }
+
+

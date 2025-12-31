@@ -1,4 +1,4 @@
-﻿// root/src/main/java/net/sugar27/quests/event/QuestEventHandler.java
+// root/src/main/java/net/sugar27/quests/event/QuestEventHandler.java
 
 package net.sugar27.quests.event;
 
@@ -103,3 +103,5 @@ public class QuestEventHandler {
         progressManager.handleEvent(player, context);
     }
 }
+
+

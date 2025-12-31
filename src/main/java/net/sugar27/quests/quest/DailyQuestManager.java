@@ -1,4 +1,4 @@
-﻿// root/src/main/java/net/sugar27/quests/quest/DailyQuestManager.java
+// root/src/main/java/net/sugar27/quests/quest/DailyQuestManager.java
 
 package net.sugar27.quests.quest;
 
@@ -148,3 +148,5 @@ public final class DailyQuestManager {
         }
     }
 }
+
+

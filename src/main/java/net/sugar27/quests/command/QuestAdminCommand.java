@@ -1,4 +1,4 @@
-﻿// root/src/main/java/net/sugar27/quests/command/QuestAdminCommand.java
+// root/src/main/java/net/sugar27/quests/command/QuestAdminCommand.java
 
 package net.sugar27.quests.command;
 
@@ -79,3 +79,5 @@ public final class QuestAdminCommand {
                                 }))));
     }
 }
+
+

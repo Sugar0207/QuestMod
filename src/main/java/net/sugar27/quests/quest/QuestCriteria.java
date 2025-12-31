@@ -1,4 +1,4 @@
-﻿// root/src/main/java/net/sugar27/quests/quest/QuestCriteria.java
+// root/src/main/java/net/sugar27/quests/quest/QuestCriteria.java
 
 package net.sugar27.quests.quest;
 
@@ -90,3 +90,5 @@ public record QuestCriteria(
         return ResourceLocation.tryParse(Objects.requireNonNull(json.get(key).getAsString()));
     }
 }
+
+

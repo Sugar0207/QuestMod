@@ -1,4 +1,4 @@
-﻿// root/src/main/java/net/sugar27/quests/client/QuestClientState.java
+// root/src/main/java/net/sugar27/quests/client/QuestClientState.java
 
 package net.sugar27.quests.client;
 
@@ -88,3 +88,5 @@ public final class QuestClientState {
     public record QuestNotification(String questId, QuestSyncPacket.NotificationType type) {
     }
 }
+
+
