@@ -87,7 +87,17 @@ public record QuestSyncPacket(
 
     // Handle client-side sync processing.
     public static void handle(QuestSyncPacket payload, IPayloadContext context) {
-        context.enqueueWork(() -> QuestClientState.applySync(payload));
+        context.enqueueWork(() -> {
+            ShugaQuestsMod.LOGGER.info(
+                    "Quest sync received: type={}, defs={}, progress={}, daily={}, notification={}",
+                    payload.syncType(),
+                    payload.questDefinitions().size(),
+                    payload.questProgresses().size(),
+                    payload.dailyQuestIds().size(),
+                    payload.notificationType()
+            );
+            QuestClientState.applySync(payload);
+        });
     }
 
     // Provide the payload type for NeoForge.

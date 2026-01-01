@@ -28,6 +28,11 @@ public final class NetworkHandler {
                 Objects.requireNonNull(QuestSyncPacket.STREAM_CODEC),
                 QuestSyncPacket::handle
         );
+        registrar.playToServer(
+                Objects.requireNonNull(QuestSyncRequestPacket.TYPE),
+                Objects.requireNonNull(QuestSyncRequestPacket.STREAM_CODEC),
+                QuestSyncRequestPacket::handle
+        );
     }
 
     // Send a full sync payload to a player.
@@ -55,6 +60,7 @@ public final class NetworkHandler {
         );
         PacketDistributor.sendToPlayer(Objects.requireNonNull(player), payload);
     }
+
 }
 
 

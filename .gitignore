@@ -1,0 +1,94 @@
+# .gitignore for QuestMod
+# このリポジトリにコミットする必要のない、環境固有やビルド生成物を列挙します。
+# 必要に応じてプロジェクトの慣習に合わせて調整してください。
+
+########################################
+# General build / IDE
+########################################
+
+# Gradle
+.gradle/
+build/
+out/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# VS Code
+.vscode/
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+########################################
+# Minecraft / NeoForge dev artifacts
+########################################
+
+# run/ は dev 実行 (runClient/runServer) が生成するワークディレクトリ
+# 開発時のログや生成物、ワールドデータが含まれるためコミット不要
+run/
+
+# moddev / generated sources
+generated/
+moddev/
+
+# ビルド出力や一時ファイル（念のため）
+tmp/
+temp/
+
+########################################
+# Logs, caches, and temp files
+########################################
+
+*.log
+logs/
+debug.log
+latest.log
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+########################################
+# Credentials / Keystore / local settings
+########################################
+
+local.properties
+secret.properties
+*.jks
+*.keystore
+.env
+.env.*
+
+########################################
+# Distribution artifacts / jars
+########################################
+
+# 通常は build/ が含むので個別の jar を無視
+*.jar
+*.war
+*.ear
+
+########################################
+# Misc
+########################################
+
+# IDE 自動生成のファイルや一時ファイル
+*.class
+*.log
+*.tmp
+*~
+# backup files
+*.bak
+
+# Node / npm caches (if used by tools)
+node_modules/
+npm-debug.log*
+
+# keep gradle wrapper itself committed; do NOT ignore gradle/wrapper/**

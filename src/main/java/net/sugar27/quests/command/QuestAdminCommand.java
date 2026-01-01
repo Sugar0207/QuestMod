@@ -14,6 +14,7 @@ import net.sugar27.quests.quest.DailyQuestManager;
 import net.sugar27.quests.quest.QuestManager;
 import net.sugar27.quests.quest.QuestProgressManager;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 // Handles the /questadmin command tree.
@@ -52,6 +53,24 @@ public final class QuestAdminCommand {
                                             PROGRESS_MANAGER.grantQuest(player, questId);
                                             return 1;
                                         }))))
+                .then(Commands.literal("list")
+                        .executes(context -> {
+                            Objects.requireNonNull(context);
+                            var quests = QuestManager.get().getAll();
+                            if (quests.isEmpty()) {
+                                context.getSource().sendSuccess(
+                                        () -> Component.translatable("command.shuga_quests.list_empty"), false);
+                                return 1;
+                            }
+                            var ids = new ArrayList<>(quests.keySet());
+                            ids.sort(String::compareToIgnoreCase);
+                            context.getSource().sendSuccess(
+                                    () -> Component.translatable("command.shuga_quests.list_header", ids.size()), false);
+                            for (String id : ids) {
+                                context.getSource().sendSuccess(() -> Component.literal("- " + id), false);
+                            }
+                            return 1;
+                        }))
                 .then(Commands.literal("reset")
                         .then(Commands.argument("player", Objects.requireNonNull(EntityArgument.player()))
                                 .executes(context -> {

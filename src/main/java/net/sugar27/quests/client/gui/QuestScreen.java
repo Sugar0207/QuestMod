@@ -71,6 +71,9 @@ public class QuestScreen extends Screen {
     // Render the quest list and detail panel.
     @Override
     public void render(@Nonnull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        var questDefinitions = QuestClientState.getQuestDefinitions();
+        refreshFiltered();
+
         // Call super.render first so that the screen background and widgets are
         // rendered by the parent implementation. Some vanilla implementations
         // may also trigger the background blur; calling renderBackground here
@@ -82,18 +85,34 @@ public class QuestScreen extends Screen {
         super.render(graphics, mouseX, mouseY, partialTick);
 
         Font font = Objects.requireNonNull(this.font);
-        graphics.drawCenteredString(font, Objects.requireNonNull(this.title), this.width / 2, 6, 0xFFFFFF);
+        graphics.drawCenteredString(font, Objects.requireNonNull(this.title), this.width / 2, 6, 0xFFFFFFFF);
 
         int listX = 20;
         int listY = 50;
         int lineHeight = 12;
 
+        int listWidth = 180;
+        int listHeight = Math.max(96, filteredQuests.size() * lineHeight + 8);
+        graphics.fill(listX - 4, listY - 4, listX + listWidth, listY + listHeight, 0x66000000);
+        var rawIds = questDefinitions.values().stream()
+                .map(QuestDefinition::id)
+                .sorted()
+                .limit(3)
+                .toList();
+        String rawPreview = rawIds.isEmpty() ? "<none>" : String.join(", ", rawIds);
+        graphics.drawString(font, Objects.requireNonNull(Component.literal("Defs: " + questDefinitions.size() + " Filtered: " + filteredQuests.size())), listX, listY - 36, 0xFFAAAAAA);
+        graphics.drawString(font, Objects.requireNonNull(Component.literal("Cat: " + selectedCategory + " Ids: " + rawPreview)), listX, listY - 24, 0xFFAAAAAA);
+        graphics.drawString(font, Objects.requireNonNull(Component.literal("Selected: " + (selectedQuestId.isEmpty() ? "<none>" : selectedQuestId))), listX, listY - 12, 0xFFAAAAAA);
+
         int index = 0;
         for (QuestDefinition quest : filteredQuests) {
             int y = listY + index * lineHeight;
-            int color = quest.id().equals(selectedQuestId) ? 0xFFE080 : 0xFFFFFF;
-            graphics.drawString(font, Objects.requireNonNull(Component.translatable(Objects.requireNonNull(quest.titleKey()))), listX, y, color);
+            int color = quest.id().equals(selectedQuestId) ? 0xFFFFE080 : 0xFFFFFFFF;
+            graphics.drawString(font, Objects.requireNonNull(Component.literal(Objects.requireNonNull(quest.id()))), listX, y, color);
             index++;
+        }
+        if (filteredQuests.isEmpty()) {
+            graphics.drawString(font, Objects.requireNonNull(Component.literal("No quests loaded")), listX, listY, 0xFFAAAAAA);
         }
 
         renderDetails(graphics, mouseX, mouseY);
@@ -112,8 +131,8 @@ public class QuestScreen extends Screen {
         int detailX = 220;
         int detailY = 50;
         Font font = Objects.requireNonNull(this.font);
-        graphics.drawString(font, Objects.requireNonNull(Component.translatable(Objects.requireNonNull(quest.titleKey()))), detailX, detailY, 0xFFFFFF);
-        graphics.drawString(font, Objects.requireNonNull(Component.translatable(Objects.requireNonNull(quest.descriptionKey()))), detailX, detailY + 14, 0xB0B0B0);
+        graphics.drawString(font, Objects.requireNonNull(Component.translatable(Objects.requireNonNull(quest.titleKey()))), detailX, detailY, 0xFFFFFFFF);
+        graphics.drawString(font, Objects.requireNonNull(Component.translatable(Objects.requireNonNull(quest.descriptionKey()))), detailX, detailY + 14, 0xFFB0B0B0);
 
         QuestProgress progress = QuestClientState.getQuestProgress().get(selectedQuestId);
         Component status = progress == null
@@ -121,21 +140,21 @@ public class QuestScreen extends Screen {
                 : progress.isCompleted()
                     ? Component.translatable("screen.shuga_quests.status.complete")
                     : Component.translatable("screen.shuga_quests.status.in_progress");
-        graphics.drawString(font, Objects.requireNonNull(status), detailX, detailY + 30, 0x80FF80);
+        graphics.drawString(font, Objects.requireNonNull(status), detailX, detailY + 30, 0xFF80FF80);
 
         int offsetY = detailY + 50;
-        graphics.drawString(font, Objects.requireNonNull(Component.translatable("screen.shuga_quests.objectives")), detailX, offsetY, 0xFFFFFF);
+        graphics.drawString(font, Objects.requireNonNull(Component.translatable("screen.shuga_quests.objectives")), detailX, offsetY, 0xFFFFFFFF);
         offsetY += 12;
         for (QuestObjective objective : quest.objectives()) {
-            graphics.drawString(font, Objects.requireNonNull(Component.literal("- " + Objects.requireNonNull(objective.id()))), detailX, offsetY, 0xD0D0D0);
+            graphics.drawString(font, Objects.requireNonNull(Component.literal("- " + Objects.requireNonNull(objective.id()))), detailX, offsetY, 0xFFD0D0D0);
             offsetY += 12;
         }
 
         offsetY += 6;
-        graphics.drawString(font, Objects.requireNonNull(Component.translatable("screen.shuga_quests.rewards")), detailX, offsetY, 0xFFFFFF);
+        graphics.drawString(font, Objects.requireNonNull(Component.translatable("screen.shuga_quests.rewards")), detailX, offsetY, 0xFFFFFFFF);
         offsetY += 12;
         for (QuestReward reward : quest.rewards()) {
-            graphics.drawString(font, Objects.requireNonNull(Component.literal("- " + Objects.requireNonNull(reward.describe()))), detailX, offsetY, 0xD0D0D0);
+            graphics.drawString(font, Objects.requireNonNull(Component.literal("- " + Objects.requireNonNull(reward.describe()))), detailX, offsetY, 0xFFD0D0D0);
             offsetY += 12;
         }
     }
@@ -143,7 +162,8 @@ public class QuestScreen extends Screen {
     // Rebuild the filtered quest list based on category.
     private void refreshFiltered() {
         filteredQuests.clear();
-        for (QuestDefinition quest : QuestClientState.getQuestDefinitions().values()) {
+        var questDefinitions = QuestClientState.getQuestDefinitions();
+        for (QuestDefinition quest : questDefinitions.values()) {
             if (selectedCategory == QuestCategory.ALL || quest.category() == selectedCategory) {
                 filteredQuests.add(quest);
             }
@@ -187,5 +207,3 @@ public class QuestScreen extends Screen {
         return false;
     }
 }
-
-

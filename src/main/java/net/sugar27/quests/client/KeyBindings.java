@@ -7,7 +7,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.KeyMapping;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.sugar27.quests.client.gui.QuestScreen;
+import net.sugar27.quests.network.QuestSyncRequestPacket;
 import org.lwjgl.glfw.GLFW;
 
 // Registers and handles the quest screen key binding.
@@ -35,10 +37,11 @@ public final class KeyBindings {
         if (OPEN_SCREEN != null && OPEN_SCREEN.consumeClick()) {
             Minecraft minecraft = Minecraft.getInstance();
             if (minecraft.player != null) {
+                if (QuestClientState.getQuestDefinitions().isEmpty()) {
+                    ClientPacketDistributor.sendToServer(new QuestSyncRequestPacket());
+                }
                 minecraft.setScreen(new QuestScreen());
             }
         }
     }
 }
-
-

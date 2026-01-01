@@ -14,5 +14,7 @@
   "hud.shuga_quests.updated": "Quest Updated",
   "hud.shuga_quests.completed": "Quest Completed",
   "command.shuga_quests.reload": "Quests reloaded",
-  "command.shuga_quests.daily_reroll": "Daily quests rerolled"
+  "command.shuga_quests.daily_reroll": "Daily quests rerolled",
+  "command.shuga_quests.list_header": "Quests ({0}):",
+  "command.shuga_quests.list_empty": "No quests loaded"
 }
