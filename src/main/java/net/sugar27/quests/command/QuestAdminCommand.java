@@ -13,6 +13,7 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.sugar27.quests.quest.DailyQuestManager;
 import net.sugar27.quests.quest.QuestManager;
 import net.sugar27.quests.quest.QuestProgressManager;
+import net.sugar27.quests.server.lang.LangManager;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -39,6 +40,7 @@ public final class QuestAdminCommand {
                             Objects.requireNonNull(context);
                             QuestManager.get().loadAll();
                             DailyQuestManager.get().loadCandidates();
+                            LangManager.get().reload();
                             PROGRESS_MANAGER.syncAll(context.getSource().getServer());
                             context.getSource().sendSuccess(() -> Component.translatable("command.shuga_quests.reload"), true);
                             return 1;

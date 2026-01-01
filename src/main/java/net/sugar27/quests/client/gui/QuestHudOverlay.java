@@ -41,7 +41,7 @@ public final class QuestHudOverlay {
         QuestDefinition quest = QuestClientState.getQuestDefinitions().get(notification.questId());
         Component questTitle = quest == null
                 ? Component.literal(Objects.requireNonNull(notification.questId()))
-                : Component.translatable(Objects.requireNonNull(quest.titleKey()));
+                : Component.literal(Objects.requireNonNull(quest.titleKey()));
 
         Component prefix = notification.type() == QuestSyncPacket.NotificationType.COMPLETED
                 ? Component.translatable(Objects.requireNonNull("hud.shuga_quests.completed"))

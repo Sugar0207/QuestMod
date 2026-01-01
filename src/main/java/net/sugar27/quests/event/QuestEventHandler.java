@@ -17,6 +17,8 @@ import net.sugar27.quests.quest.QuestCriteriaType;
 import net.sugar27.quests.quest.QuestEventContext;
 import net.sugar27.quests.quest.QuestManager;
 import net.sugar27.quests.quest.QuestProgressManager;
+import net.sugar27.quests.server.lang.LangManager;
+import net.sugar27.quests.server.lang.PlayerLocaleStore;
 
 import java.util.Objects;
 
@@ -29,6 +31,7 @@ public class QuestEventHandler {
     public void onServerStarting(ServerStartingEvent event) {
         QuestManager.get().loadAll();
         DailyQuestManager.get().loadCandidates();
+        LangManager.get().reload();
         DailyQuestManager.get().ensureDailySelection(event.getServer());
     }
 
@@ -39,6 +42,12 @@ public class QuestEventHandler {
             DailyQuestManager.get().ensureDailySelection(player.getServer());
             progressManager.syncFull(player);
         }
+    }
+
+    // Clear locale state when a player logs out.
+    @SubscribeEvent
+    public void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        PlayerLocaleStore.clearLocale(event.getEntity().getUUID());
     }
 
     // Handle block break events.

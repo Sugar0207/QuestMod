@@ -9,7 +9,10 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.sugar27.quests.ShugaQuestsMod;
 import net.sugar27.quests.quest.QuestDefinition;
 import net.sugar27.quests.quest.QuestProgress;
+import net.sugar27.quests.server.lang.LangManager;
+import net.sugar27.quests.server.lang.PlayerLocaleStore;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.annotation.Nonnull;
@@ -33,13 +36,19 @@ public final class NetworkHandler {
                 Objects.requireNonNull(QuestSyncRequestPacket.STREAM_CODEC),
                 QuestSyncRequestPacket::handle
         );
+        registrar.playToServer(
+                Objects.requireNonNull(ClientLanguagePacket.TYPE),
+                Objects.requireNonNull(ClientLanguagePacket.STREAM_CODEC),
+                ClientLanguagePacket::handle
+        );
     }
 
     // Send a full sync payload to a player.
     public static void sendFullSync(@Nonnull ServerPlayer player, List<QuestDefinition> definitions, List<QuestProgress> progresses, List<String> daily) {
+        String locale = PlayerLocaleStore.getLocale(player.getUUID());
         QuestSyncPacket payload = new QuestSyncPacket(
                 QuestSyncPacket.SyncType.FULL,
-                definitions,
+                localizeDefinitions(definitions, locale),
                 progresses,
                 daily,
                 "",
@@ -50,9 +59,10 @@ public final class NetworkHandler {
 
     // Send a delta sync payload to a player.
     public static void sendDeltaSync(@Nonnull ServerPlayer player, QuestDefinition definition, QuestProgress progress, QuestSyncPacket.NotificationType notificationType) {
+        String locale = PlayerLocaleStore.getLocale(player.getUUID());
         QuestSyncPacket payload = new QuestSyncPacket(
                 QuestSyncPacket.SyncType.DELTA,
-                List.of(definition),
+                localizeDefinitions(List.of(definition), locale),
                 List.of(progress),
                 List.of(),
                 definition.id(),
@@ -61,6 +71,26 @@ public final class NetworkHandler {
         PacketDistributor.sendToPlayer(Objects.requireNonNull(player), payload);
     }
 
+    private static List<QuestDefinition> localizeDefinitions(List<QuestDefinition> definitions, String locale) {
+        if (definitions.isEmpty()) {
+            return List.of();
+        }
+        LangManager langManager = LangManager.get();
+        List<QuestDefinition> localized = new ArrayList<>(definitions.size());
+        for (QuestDefinition definition : definitions) {
+            localized.add(new QuestDefinition(
+                    definition.id(),
+                    langManager.translate(locale, definition.titleKey()),
+                    langManager.translate(locale, definition.descriptionKey()),
+                    definition.category(),
+                    definition.type(),
+                    definition.repeatable(),
+                    definition.objectives(),
+                    definition.rewards()
+            ));
+        }
+        return localized;
+    }
 }
 
 

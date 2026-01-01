@@ -16,8 +16,8 @@ public final class ClientSetup {
     public static void init(IEventBus modEventBus) {
         modEventBus.addListener(KeyBindings::onRegisterKeyMappings);
         NeoForge.EVENT_BUS.addListener(KeyBindings::onClientTick);
+        NeoForge.EVENT_BUS.addListener(ClientLocaleSender::onClientTick);
         NeoForge.EVENT_BUS.addListener(QuestHudOverlay::onRenderGui);
     }
 }
-
 

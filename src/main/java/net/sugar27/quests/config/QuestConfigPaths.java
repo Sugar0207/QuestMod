@@ -28,6 +28,11 @@ public final class QuestConfigPaths {
     public static Path getDailyDir() {
         return getRootDir().resolve("daily");
     }
+
+    // Get the server lang directory.
+    public static Path getLangDir() {
+        return getRootDir().resolve("lang");
+    }
 }
 
 

@@ -91,28 +91,12 @@ public class QuestScreen extends Screen {
         int listY = 50;
         int lineHeight = 12;
 
-        int listWidth = 180;
-        int listHeight = Math.max(96, filteredQuests.size() * lineHeight + 8);
-        graphics.fill(listX - 4, listY - 4, listX + listWidth, listY + listHeight, 0x66000000);
-        var rawIds = questDefinitions.values().stream()
-                .map(QuestDefinition::id)
-                .sorted()
-                .limit(3)
-                .toList();
-        String rawPreview = rawIds.isEmpty() ? "<none>" : String.join(", ", rawIds);
-        graphics.drawString(font, Objects.requireNonNull(Component.literal("Defs: " + questDefinitions.size() + " Filtered: " + filteredQuests.size())), listX, listY - 36, 0xFFAAAAAA);
-        graphics.drawString(font, Objects.requireNonNull(Component.literal("Cat: " + selectedCategory + " Ids: " + rawPreview)), listX, listY - 24, 0xFFAAAAAA);
-        graphics.drawString(font, Objects.requireNonNull(Component.literal("Selected: " + (selectedQuestId.isEmpty() ? "<none>" : selectedQuestId))), listX, listY - 12, 0xFFAAAAAA);
-
         int index = 0;
         for (QuestDefinition quest : filteredQuests) {
             int y = listY + index * lineHeight;
             int color = quest.id().equals(selectedQuestId) ? 0xFFFFE080 : 0xFFFFFFFF;
-            graphics.drawString(font, Objects.requireNonNull(Component.literal(Objects.requireNonNull(quest.id()))), listX, y, color);
+            graphics.drawString(font, Objects.requireNonNull(Component.translatable(Objects.requireNonNull(quest.titleKey()))), listX, y, color);
             index++;
-        }
-        if (filteredQuests.isEmpty()) {
-            graphics.drawString(font, Objects.requireNonNull(Component.literal("No quests loaded")), listX, listY, 0xFFAAAAAA);
         }
 
         renderDetails(graphics, mouseX, mouseY);
@@ -131,8 +115,8 @@ public class QuestScreen extends Screen {
         int detailX = 220;
         int detailY = 50;
         Font font = Objects.requireNonNull(this.font);
-        graphics.drawString(font, Objects.requireNonNull(Component.translatable(Objects.requireNonNull(quest.titleKey()))), detailX, detailY, 0xFFFFFFFF);
-        graphics.drawString(font, Objects.requireNonNull(Component.translatable(Objects.requireNonNull(quest.descriptionKey()))), detailX, detailY + 14, 0xFFB0B0B0);
+        graphics.drawString(font, Objects.requireNonNull(Component.literal(Objects.requireNonNull(quest.titleKey()))), detailX, detailY, 0xFFFFFFFF);
+        graphics.drawString(font, Objects.requireNonNull(Component.literal(Objects.requireNonNull(quest.descriptionKey()))), detailX, detailY + 14, 0xFFB0B0B0);
 
         QuestProgress progress = QuestClientState.getQuestProgress().get(selectedQuestId);
         Component status = progress == null
