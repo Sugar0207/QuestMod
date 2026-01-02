@@ -15,6 +15,6 @@
   "hud.shuga_quests.completed": "クエスト達成",
   "command.shuga_quests.reload": "クエストを再読み込みしました",
   "command.shuga_quests.daily_reroll": "本日のデイリーを再抽選しました",
-  "command.shuga_quests.list_header": "クエスト一覧 ({0}):",
+  "command.shuga_quests.list_header": "クエスト一覧 :",
   "command.shuga_quests.list_empty": "クエストが読み込まれていません"
 }
