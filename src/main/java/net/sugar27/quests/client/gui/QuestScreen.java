@@ -206,6 +206,19 @@ public class QuestScreen extends Screen {
         if (criteriaList.isEmpty()) {
             total = 1;
             current = (objectiveProgress != null && objectiveProgress.isCompleted()) ? 1 : 0;
+        } else if (objective.logic() == net.sugar27.quests.quest.QuestLogicOperator.OR) {
+            for (int i = 0; i < criteriaList.size(); i++) {
+                int required = Math.max(0, criteriaList.get(i).count());
+                total = Math.max(total, required);
+                int value = 0;
+                if (objectiveProgress != null && i < objectiveProgress.criteriaCounts().size()) {
+                    value = Math.max(0, objectiveProgress.criteriaCounts().get(i));
+                }
+                current = Math.max(current, Math.min(value, required));
+            }
+            if (objectiveProgress != null && objectiveProgress.isCompleted()) {
+                current = total;
+            }
         } else {
             for (int i = 0; i < criteriaList.size(); i++) {
                 int required = Math.max(0, criteriaList.get(i).count());

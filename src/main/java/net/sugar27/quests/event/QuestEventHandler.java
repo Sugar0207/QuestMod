@@ -67,8 +67,10 @@ public class QuestEventHandler {
         if (!(event.getPlayer() instanceof ServerPlayer player)) {
             return;
         }
-        ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(Objects.requireNonNull(event.getItemEntity().getItem().getItem()));
-        int count = event.getItemEntity().getItem().getCount();
+        var originalStack = event.getOriginalStack();
+        var currentStack = event.getCurrentStack();
+        ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(Objects.requireNonNull(originalStack.getItem()));
+        int count = Math.max(1, originalStack.getCount() - currentStack.getCount());
         QuestEventContext context = new QuestEventContext(player, QuestCriteriaType.ITEM_ACQUIRED, itemId, count, player.level(), player.getX(), player.getY(), player.getZ());
         progressManager.handleEvent(player, context);
     }
