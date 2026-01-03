@@ -23,7 +23,7 @@ public record QuestDefinition(
 ) {
     // Parse a quest definition from JSON.
     public static QuestDefinition fromJson(JsonObject json) {
-        String id = json.get("id").getAsString();
+        String id = json.get("id").getAsString().replace('/', '.');
         String titleKey = json.get("title_key").getAsString();
         String descriptionKey = json.get("description_key").getAsString();
         QuestCategory category = QuestCategory.fromString(

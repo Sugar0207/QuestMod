@@ -10,6 +10,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.sugar27.quests.client.QuestClientState;
 import net.sugar27.quests.quest.QuestCategory;
+import net.sugar27.quests.quest.QuestCriteria;
 import net.sugar27.quests.quest.QuestDefinition;
 import net.sugar27.quests.quest.QuestObjective;
 import net.sugar27.quests.quest.QuestProgress;
@@ -115,8 +116,8 @@ public class QuestScreen extends Screen {
         int detailX = 220;
         int detailY = 50;
         Font font = Objects.requireNonNull(this.font);
-        graphics.drawString(font, Objects.requireNonNull(Component.literal(Objects.requireNonNull(quest.titleKey()))), detailX, detailY, 0xFFFFFFFF);
-        graphics.drawString(font, Objects.requireNonNull(Component.literal(Objects.requireNonNull(quest.descriptionKey()))), detailX, detailY + 14, 0xFFB0B0B0);
+        graphics.drawString(font, Objects.requireNonNull(Component.translatable(Objects.requireNonNull(quest.titleKey()))), detailX, detailY, 0xFFFFFFFF);
+        graphics.drawString(font, Objects.requireNonNull(Component.translatable(Objects.requireNonNull(quest.descriptionKey()))), detailX, detailY + 14, 0xFFB0B0B0);
 
         QuestProgress progress = QuestClientState.getQuestProgress().get(selectedQuestId);
         Component status = progress == null
@@ -130,7 +131,8 @@ public class QuestScreen extends Screen {
         graphics.drawString(font, Objects.requireNonNull(Component.translatable("screen.shuga_quests.objectives")), detailX, offsetY, 0xFFFFFFFF);
         offsetY += 12;
         for (QuestObjective objective : quest.objectives()) {
-            graphics.drawString(font, Objects.requireNonNull(Component.literal("- " + Objects.requireNonNull(objective.id()))), detailX, offsetY, 0xFFD0D0D0);
+            Component objectiveLine = getObjectiveProgressComponent(objective, progress);
+            graphics.drawString(font, Objects.requireNonNull(objectiveLine), detailX, offsetY, 0xFFD0D0D0);
             offsetY += 12;
         }
 
@@ -138,7 +140,11 @@ public class QuestScreen extends Screen {
         graphics.drawString(font, Objects.requireNonNull(Component.translatable("screen.shuga_quests.rewards")), detailX, offsetY, 0xFFFFFFFF);
         offsetY += 12;
         for (QuestReward reward : quest.rewards()) {
-            graphics.drawString(font, Objects.requireNonNull(Component.literal("- " + Objects.requireNonNull(reward.describe()))), detailX, offsetY, 0xFFD0D0D0);
+            if (reward.type() == net.sugar27.quests.quest.QuestRewardType.COMMAND) {
+                continue;
+            }
+            Component rewardLine = Component.literal("- ").append(Objects.requireNonNull(reward.describeComponent()));
+            graphics.drawString(font, Objects.requireNonNull(rewardLine), detailX, offsetY, 0xFFD0D0D0);
             offsetY += 12;
         }
     }
@@ -189,5 +195,35 @@ public class QuestScreen extends Screen {
     @Override
     public boolean isPauseScreen() {
         return false;
+    }
+
+    private Component getObjectiveProgressComponent(QuestObjective objective, QuestProgress progress) {
+        int total = 0;
+        int current = 0;
+        List<QuestCriteria> criteriaList = objective.criteria();
+        QuestProgress.ObjectiveProgress objectiveProgress = progress == null ? null : progress.objectives().get(objective.id());
+
+        if (criteriaList.isEmpty()) {
+            total = 1;
+            current = (objectiveProgress != null && objectiveProgress.isCompleted()) ? 1 : 0;
+        } else {
+            for (int i = 0; i < criteriaList.size(); i++) {
+                int required = Math.max(0, criteriaList.get(i).count());
+                total += required;
+                int value = 0;
+                if (objectiveProgress != null && i < objectiveProgress.criteriaCounts().size()) {
+                    value = Math.max(0, objectiveProgress.criteriaCounts().get(i));
+                }
+                current += Math.min(value, required);
+            }
+        }
+
+        Component label = Component.translatable(getObjectiveTranslationKey(objective));
+        Component progressLabel = Component.translatable("quest.objective.progress", label, current, total);
+        return Component.literal("- ").append(progressLabel);
+    }
+
+    private String getObjectiveTranslationKey(QuestObjective objective) {
+        return "quest.objective." + objective.id();
     }
 }

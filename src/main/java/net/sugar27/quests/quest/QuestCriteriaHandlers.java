@@ -61,6 +61,12 @@ public final class QuestCriteriaHandlers {
                 return 0;
             }
         }
+        if (criteria.yMin() != null && context.y() < criteria.yMin()) {
+            return 0;
+        }
+        if (criteria.yMax() != null && context.y() > criteria.yMax()) {
+            return 0;
+        }
         double dx = criteria.x() - context.x();
         double dy = criteria.y() - context.y();
         double dz = criteria.z() - context.z();

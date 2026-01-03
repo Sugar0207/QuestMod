@@ -4,8 +4,10 @@ package net.sugar27.quests.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.suggestion.SuggestionProvider;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -21,6 +23,17 @@ import java.util.Objects;
 // Handles the /questadmin command tree.
 public final class QuestAdminCommand {
     private static final QuestProgressManager PROGRESS_MANAGER = new QuestProgressManager();
+    private static final SuggestionProvider<CommandSourceStack> QUEST_ID_SUGGESTIONS = (context, builder) -> {
+        var ids = new ArrayList<>(QuestManager.get().getAll().keySet());
+        ids.sort(String::compareToIgnoreCase);
+        return SharedSuggestionProvider.suggest(ids, builder);
+    };
+    private static final SuggestionProvider<CommandSourceStack> QUEST_ID_OR_ALL_SUGGESTIONS = (context, builder) -> {
+        var ids = new ArrayList<>(QuestManager.get().getAll().keySet());
+        ids.add("all");
+        ids.sort(String::compareToIgnoreCase);
+        return SharedSuggestionProvider.suggest(ids, builder);
+    };
 
     // Utility class; no instantiation.
     private QuestAdminCommand() {
@@ -48,11 +61,16 @@ public final class QuestAdminCommand {
                 .then(Commands.literal("grant")
                         .then(Commands.argument("player", Objects.requireNonNull(EntityArgument.player()))
                                 .then(Commands.argument("quest_id", Objects.requireNonNull(StringArgumentType.string()))
+                                        .suggests(QUEST_ID_OR_ALL_SUGGESTIONS)
                                         .executes(context -> {
                                             Objects.requireNonNull(context);
                                             ServerPlayer player = EntityArgument.getPlayer(context, "player");
                                             String questId = StringArgumentType.getString(context, "quest_id");
-                                            PROGRESS_MANAGER.grantQuest(player, questId);
+                                            if ("all".equalsIgnoreCase(questId)) {
+                                                PROGRESS_MANAGER.grantAllQuests(player);
+                                            } else {
+                                                PROGRESS_MANAGER.grantQuest(player, questId);
+                                            }
                                             return 1;
                                         }))))
                 .then(Commands.literal("list")
@@ -82,11 +100,16 @@ public final class QuestAdminCommand {
                                     return 1;
                                 })
                                 .then(Commands.argument("quest_id", Objects.requireNonNull(StringArgumentType.string()))
+                                        .suggests(QUEST_ID_OR_ALL_SUGGESTIONS)
                                         .executes(context -> {
                                             Objects.requireNonNull(context);
                                             ServerPlayer player = EntityArgument.getPlayer(context, "player");
                                             String questId = StringArgumentType.getString(context, "quest_id");
-                                            PROGRESS_MANAGER.resetQuest(player, questId);
+                                            if ("all".equalsIgnoreCase(questId)) {
+                                                PROGRESS_MANAGER.resetQuest(player, "");
+                                            } else {
+                                                PROGRESS_MANAGER.resetQuest(player, questId);
+                                            }
                                             return 1;
                                         }))))
                 .then(Commands.literal("daily")

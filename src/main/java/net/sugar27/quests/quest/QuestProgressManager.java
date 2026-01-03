@@ -177,6 +177,13 @@ public final class QuestProgressManager {
         NetworkHandler.sendDeltaSync(player, quest, progress, QuestSyncPacket.NotificationType.COMPLETED);
     }
 
+    // Force-complete all quests for a player.
+    public void grantAllQuests(ServerPlayer player) {
+        for (QuestDefinition quest : QuestManager.get().getAll().values()) {
+            grantQuest(player, quest.id());
+        }
+    }
+
     // Reset quest progress for a player.
     public void resetQuest(ServerPlayer player, String questId) {
         MinecraftServer server = player.getServer();

@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -59,6 +60,17 @@ public record QuestReward(
             case EFFECT -> "Effect " + Objects.requireNonNullElse(effect, "unknown") + " " + duration + "t";
             case COMMAND -> "Command";
             case ADVANCEMENT -> "Advancement " + Objects.requireNonNullElse(advancement, "unknown");
+        });
+    }
+
+    // Provide a localized description component for the UI.
+    public Component describeComponent() {
+        return Objects.requireNonNull(switch (Objects.requireNonNull(type)) {
+            case ITEM -> Component.translatable("quest.reward.item", getItemName(), count);
+            case XP -> Component.translatable("quest.reward.xp", amount);
+            case EFFECT -> Component.translatable("quest.reward.effect", getEffectName(), getEffectSeconds());
+            case COMMAND -> Component.translatable("quest.reward.command");
+            case ADVANCEMENT -> Component.translatable("quest.reward.advancement", getAdvancementName());
         });
     }
 
@@ -160,6 +172,36 @@ public record QuestReward(
             return null;
         }
         return ResourceLocation.tryParse(Objects.requireNonNull(json.get(key).getAsString()));
+    }
+
+    private Component getItemName() {
+        if (item == null) {
+            return Component.translatable("quest.reward.unknown");
+        }
+        ItemStack stack = new ItemStack(BuiltInRegistries.ITEM.getValue(item));
+        return stack.getHoverName();
+    }
+
+    private Component getEffectName() {
+        if (effect == null) {
+            return Component.translatable("quest.reward.unknown");
+        }
+        var mobEffect = BuiltInRegistries.MOB_EFFECT.get(effect);
+        if (mobEffect.isEmpty()) {
+            return Component.literal(effect.toString());
+        }
+        return Component.translatable(mobEffect.get().value().getDescriptionId());
+    }
+
+    private Component getAdvancementName() {
+        if (advancement == null) {
+            return Component.translatable("quest.reward.unknown");
+        }
+        return Component.literal(advancement.toString());
+    }
+
+    private int getEffectSeconds() {
+        return Math.max(0, duration) / 20;
     }
 }
 

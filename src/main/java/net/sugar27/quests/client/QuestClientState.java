@@ -3,6 +3,8 @@
 package net.sugar27.quests.client;
 
 import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
+import net.minecraft.sounds.SoundEvents;
 import net.sugar27.quests.network.QuestSyncPacket;
 import net.sugar27.quests.quest.QuestDefinition;
 import net.sugar27.quests.quest.QuestProgress;
@@ -53,6 +55,7 @@ public final class QuestClientState {
             notificationQuestId = packet.notificationQuestId();
             notificationType = packet.notificationType();
             notificationExpiresAt = Util.getMillis() + 5000L;
+            playNotificationSound(notificationType);
         }
     }
 
@@ -86,6 +89,18 @@ public final class QuestClientState {
 
     // Notification payload used by the HUD overlay.
     public record QuestNotification(String questId, QuestSyncPacket.NotificationType type) {
+    }
+
+    private static void playNotificationSound(QuestSyncPacket.NotificationType type) {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft == null || minecraft.player == null) {
+            return;
+        }
+        if (type == QuestSyncPacket.NotificationType.COMPLETED) {
+            minecraft.player.playSound(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, 1.0F, 1.0F);
+        } else if (type == QuestSyncPacket.NotificationType.UPDATED) {
+            minecraft.player.playSound(SoundEvents.UI_TOAST_IN, 1.0F, 1.0F);
+        }
     }
 }
 

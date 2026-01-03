@@ -16,6 +16,8 @@ public record QuestCriteria(
         ResourceLocation entity,
         int count,
         ResourceLocation dimension,
+        Double yMin,
+        Double yMax,
         double x,
         double y,
         double z,
@@ -29,11 +31,13 @@ public record QuestCriteria(
         ResourceLocation entity = getResource(json, "entity");
         int count = json.has("count") ? json.get("count").getAsInt() : 1;
         ResourceLocation dimension = getResource(json, "dimension");
+        Double yMin = json.has("y_min") ? json.get("y_min").getAsDouble() : null;
+        Double yMax = json.has("y_max") ? json.get("y_max").getAsDouble() : null;
         double x = json.has("x") ? json.get("x").getAsDouble() : 0D;
         double y = json.has("y") ? json.get("y").getAsDouble() : 0D;
         double z = json.has("z") ? json.get("z").getAsDouble() : 0D;
         double radius = json.has("radius") ? json.get("radius").getAsDouble() : 0D;
-        return new QuestCriteria(type, item, block, entity, count, dimension, x, y, z, radius);
+        return new QuestCriteria(type, item, block, entity, count, dimension, yMin, yMax, x, y, z, radius);
     }
 
     // Serialize this criteria into a network buffer.
@@ -56,6 +60,14 @@ public record QuestCriteria(
         if (dimension != null) {
             buf.writeResourceLocation(dimension);
         }
+        buf.writeBoolean(yMin != null);
+        if (yMin != null) {
+            buf.writeDouble(yMin);
+        }
+        buf.writeBoolean(yMax != null);
+        if (yMax != null) {
+            buf.writeDouble(yMax);
+        }
         buf.writeDouble(x);
         buf.writeDouble(y);
         buf.writeDouble(z);
@@ -70,11 +82,13 @@ public record QuestCriteria(
         ResourceLocation entity = buf.readBoolean() ? buf.readResourceLocation() : null;
         int count = buf.readVarInt();
         ResourceLocation dimension = buf.readBoolean() ? buf.readResourceLocation() : null;
+        Double yMin = buf.readBoolean() ? buf.readDouble() : null;
+        Double yMax = buf.readBoolean() ? buf.readDouble() : null;
         double x = buf.readDouble();
         double y = buf.readDouble();
         double z = buf.readDouble();
         double radius = buf.readDouble();
-        return new QuestCriteria(type, item, block, entity, count, dimension, x, y, z, radius);
+        return new QuestCriteria(type, item, block, entity, count, dimension, yMin, yMax, x, y, z, radius);
     }
 
     // Safely read string values from JSON.

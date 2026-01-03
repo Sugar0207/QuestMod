@@ -50,8 +50,8 @@ public final class QuestHudOverlay {
         GuiGraphics graphics = event.getGuiGraphics();
         int x = minecraft.getWindow().getGuiScaledWidth() - 10;
         int y = 10;
-        graphics.drawString(Objects.requireNonNull(minecraft.font), Objects.requireNonNull(prefix), x - minecraft.font.width(Objects.requireNonNull(prefix)), y, 0xFFE080);
-        graphics.drawString(Objects.requireNonNull(minecraft.font), Objects.requireNonNull(questTitle), x - minecraft.font.width(Objects.requireNonNull(questTitle)), y + 12, 0xFFFFFF);
+        graphics.drawString(Objects.requireNonNull(minecraft.font), Objects.requireNonNull(prefix), x - minecraft.font.width(Objects.requireNonNull(prefix)), y, 0xFFFFE080);
+        graphics.drawString(Objects.requireNonNull(minecraft.font), Objects.requireNonNull(questTitle), x - minecraft.font.width(Objects.requireNonNull(questTitle)), y + 12, 0xFFFFFFFF);
     }
 }
 
