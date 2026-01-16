@@ -45,8 +45,8 @@ public final class QuestManager {
             return;
         }
 
-        loadQuestDefinitions(QuestConfigPaths.getQuestsDir());
-        loadQuestDefinitions(QuestConfigPaths.getDailyDir());
+        loadQuestDefinitions(QuestConfigPaths.getQuestsDir(), false);
+        loadQuestDefinitions(QuestConfigPaths.getDailyDir(), true);
         rebuildCriteriaIndex();
         ShugaQuestsMod.LOGGER.info("Loaded {} quests", quests.size());
     }
@@ -67,12 +67,24 @@ public final class QuestManager {
     }
 
     // Load quest JSON files from the given directory.
-    private void loadQuestDefinitions(Path dir) {
+    private void loadQuestDefinitions(Path dir, boolean forceDailyType) {
         try (var paths = Files.list(dir)) {
             paths.filter(path -> path.toString().endsWith(".json")).forEach(path -> {
                 try (Reader reader = Files.newBufferedReader(path)) {
                     JsonObject json = JsonParser.parseReader(reader).getAsJsonObject();
                     QuestDefinition quest = QuestDefinition.fromJson(json);
+                    if (forceDailyType) {
+                        quest = new QuestDefinition(
+                                quest.id(),
+                                quest.titleKey(),
+                                quest.descriptionKey(),
+                                quest.category(),
+                                "daily",
+                                quest.repeatable(),
+                                quest.objectives(),
+                                quest.rewards()
+                        );
+                    }
                     quests.put(quest.id(), quest);
                 } catch (Exception ex) {
                     ShugaQuestsMod.LOGGER.error("Failed to load quest file: {}", path, ex);

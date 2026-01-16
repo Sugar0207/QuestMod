@@ -5,6 +5,7 @@ package net.sugar27.quests.client;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.sounds.SoundEvents;
+import net.sugar27.quests.config.QuestClientConfig;
 import net.sugar27.quests.network.QuestSyncPacket;
 import net.sugar27.quests.quest.QuestDefinition;
 import net.sugar27.quests.quest.QuestProgress;
@@ -51,7 +52,8 @@ public final class QuestClientState {
             DAILY_QUESTS.addAll(packet.dailyQuestIds());
         }
 
-        if (packet.notificationType() != QuestSyncPacket.NotificationType.NONE) {
+        if (packet.notificationType() != QuestSyncPacket.NotificationType.NONE
+                && QuestClientConfig.hudNotificationsEnabled()) {
             notificationQuestId = packet.notificationQuestId();
             notificationType = packet.notificationType();
             notificationExpiresAt = Util.getMillis() + 5000L;
@@ -76,6 +78,11 @@ public final class QuestClientState {
 
     // Get the current notification, clearing it if expired.
     public static QuestNotification getNotification() {
+        if (!QuestClientConfig.hudNotificationsEnabled()) {
+            notificationType = QuestSyncPacket.NotificationType.NONE;
+            notificationQuestId = "";
+            return null;
+        }
         if (notificationType == QuestSyncPacket.NotificationType.NONE) {
             return null;
         }

@@ -26,6 +26,7 @@ import java.util.Objects;
 public class QuestScreen extends Screen {
     private QuestCategory selectedCategory = QuestCategory.ALL;
     private String selectedQuestId = "";
+    private boolean showDailyOnly = false;
 
     private final List<QuestDefinition> filteredQuests = new ArrayList<>();
 
@@ -39,32 +40,44 @@ public class QuestScreen extends Screen {
     protected void init() {
         int x = this.width / 2 - 150;
         int y = 20;
-        int buttonWidth = 70;
+        int buttonWidth = 55;
         int buttonHeight = 20;
+        int buttonStep = buttonWidth + 5;
 
         @Nonnull Component allLabel = Objects.requireNonNull(Component.translatable("screen.shuga_quests.category.all"));
         addRenderableWidget(Objects.requireNonNull(Button.builder(allLabel, button -> {
             selectedCategory = QuestCategory.ALL;
+            showDailyOnly = false;
             refreshFiltered();
         }).bounds(x, y, buttonWidth, buttonHeight).build()));
+
+        @Nonnull Component dailyLabel = Objects.requireNonNull(Component.translatable("screen.shuga_quests.category.daily"));
+        addRenderableWidget(Objects.requireNonNull(Button.builder(dailyLabel, button -> {
+            selectedCategory = QuestCategory.ALL;
+            showDailyOnly = true;
+            refreshFiltered();
+        }).bounds(x + buttonStep, y, buttonWidth, buttonHeight).build()));
 
         @Nonnull Component lifeLabel = Objects.requireNonNull(Component.translatable("screen.shuga_quests.category.life"));
         addRenderableWidget(Objects.requireNonNull(Button.builder(lifeLabel, button -> {
             selectedCategory = QuestCategory.LIFE;
+            showDailyOnly = false;
             refreshFiltered();
-        }).bounds(x + 75, y, buttonWidth, buttonHeight).build()));
+        }).bounds(x + buttonStep * 2, y, buttonWidth, buttonHeight).build()));
 
         @Nonnull Component exploreLabel = Objects.requireNonNull(Component.translatable("screen.shuga_quests.category.explore"));
         addRenderableWidget(Objects.requireNonNull(Button.builder(exploreLabel, button -> {
             selectedCategory = QuestCategory.EXPLORE;
+            showDailyOnly = false;
             refreshFiltered();
-        }).bounds(x + 150, y, buttonWidth, buttonHeight).build()));
+        }).bounds(x + buttonStep * 3, y, buttonWidth, buttonHeight).build()));
 
         @Nonnull Component combatLabel = Objects.requireNonNull(Component.translatable("screen.shuga_quests.category.combat"));
         addRenderableWidget(Objects.requireNonNull(Button.builder(combatLabel, button -> {
             selectedCategory = QuestCategory.COMBAT;
+            showDailyOnly = false;
             refreshFiltered();
-        }).bounds(x + 225, y, buttonWidth, buttonHeight).build()));
+        }).bounds(x + buttonStep * 4, y, buttonWidth, buttonHeight).build()));
 
         refreshFiltered();
     }
@@ -74,6 +87,7 @@ public class QuestScreen extends Screen {
     public void render(@Nonnull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         var questDefinitions = QuestClientState.getQuestDefinitions();
         refreshFiltered();
+        List<String> dailyQuestIds = QuestClientState.getDailyQuestIds();
 
         // Call super.render first so that the screen background and widgets are
         // rendered by the parent implementation. Some vanilla implementations
@@ -95,8 +109,17 @@ public class QuestScreen extends Screen {
         int index = 0;
         for (QuestDefinition quest : filteredQuests) {
             int y = listY + index * lineHeight;
-            int color = quest.id().equals(selectedQuestId) ? 0xFFFFE080 : 0xFFFFFFFF;
-            graphics.drawString(font, Objects.requireNonNull(Component.translatable(Objects.requireNonNull(quest.titleKey()))), listX, y, color);
+            boolean isDaily = dailyQuestIds.contains(quest.id());
+            int color = quest.id().equals(selectedQuestId)
+                    ? 0xFFFFE080
+                    : isDaily
+                        ? 0xFFFFC040
+                        : 0xFFFFFFFF;
+            Component title = Component.translatable(Objects.requireNonNull(quest.titleKey()));
+            Component line = isDaily
+                    ? Component.literal("[").append(Component.translatable("screen.shuga_quests.daily_tag")).append("] ").append(title)
+                    : title;
+            graphics.drawString(font, Objects.requireNonNull(line), listX, y, color);
             index++;
         }
 
@@ -115,7 +138,12 @@ public class QuestScreen extends Screen {
 
         int detailX = 220;
         int detailY = 50;
+        boolean isDaily = QuestClientState.getDailyQuestIds().contains(quest.id());
         Font font = Objects.requireNonNull(this.font);
+        if (isDaily) {
+            graphics.drawString(font, Objects.requireNonNull(Component.translatable("screen.shuga_quests.daily_label")), detailX, detailY, 0xFFFFC040);
+            detailY += 12;
+        }
         graphics.drawString(font, Objects.requireNonNull(Component.translatable(Objects.requireNonNull(quest.titleKey()))), detailX, detailY, 0xFFFFFFFF);
         graphics.drawString(font, Objects.requireNonNull(Component.translatable(Objects.requireNonNull(quest.descriptionKey()))), detailX, detailY + 14, 0xFFB0B0B0);
 
@@ -153,9 +181,18 @@ public class QuestScreen extends Screen {
     private void refreshFiltered() {
         filteredQuests.clear();
         var questDefinitions = QuestClientState.getQuestDefinitions();
+        List<String> dailyQuestIds = QuestClientState.getDailyQuestIds();
         for (QuestDefinition quest : questDefinitions.values()) {
-            if (selectedCategory == QuestCategory.ALL || quest.category() == selectedCategory) {
-                filteredQuests.add(quest);
+            boolean isDailyQuest = "daily".equalsIgnoreCase(quest.type());
+            boolean isSelectedDaily = dailyQuestIds.contains(quest.id());
+            if (showDailyOnly) {
+                if (isDailyQuest && isSelectedDaily) {
+                    filteredQuests.add(quest);
+                }
+            } else if (!isDailyQuest || isSelectedDaily) {
+                if (selectedCategory == QuestCategory.ALL || quest.category() == selectedCategory) {
+                    filteredQuests.add(quest);
+                }
             }
         }
         filteredQuests.sort(Comparator.comparing(QuestDefinition::id));

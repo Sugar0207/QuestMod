@@ -7,9 +7,11 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
+import net.sugar27.quests.config.QuestClientConfig;
 import net.sugar27.quests.command.QuestAdminCommand;
 import net.sugar27.quests.event.QuestEventHandler;
 import net.sugar27.quests.network.NetworkHandler;
@@ -28,6 +30,7 @@ public class ShugaQuestsMod {
         // Register payloads and common setup hooks.
         modEventBus.addListener(NetworkHandler::registerPayloads);
         modEventBus.addListener(this::commonSetup);
+        modContainer.registerConfig(ModConfig.Type.CLIENT, QuestClientConfig.SPEC);
 
         // Register server/gameplay events and admin commands.
         NeoForge.EVENT_BUS.register(new QuestEventHandler());

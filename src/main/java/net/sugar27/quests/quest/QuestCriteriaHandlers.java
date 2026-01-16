@@ -2,6 +2,7 @@
 
 package net.sugar27.quests.quest;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.EnumMap;
@@ -58,6 +59,12 @@ public final class QuestCriteriaHandlers {
         }
         if (criteria.dimension() != null && context.level() != null) {
             if (!criteria.dimension().equals(context.level().dimension().location())) {
+                return 0;
+            }
+        }
+        if (criteria.biome() != null && context.level() != null) {
+            var biomeKey = context.level().getBiome(BlockPos.containing(context.x(), context.y(), context.z())).unwrapKey();
+            if (biomeKey.isEmpty() || !criteria.biome().equals(biomeKey.get().location())) {
                 return 0;
             }
         }

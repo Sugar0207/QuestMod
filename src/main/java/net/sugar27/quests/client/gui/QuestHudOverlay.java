@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.sugar27.quests.client.QuestClientState;
+import net.sugar27.quests.config.QuestClientConfig;
 import net.sugar27.quests.network.QuestSyncPacket;
 import net.sugar27.quests.quest.QuestDefinition;
 
@@ -15,9 +16,6 @@ import java.util.Objects;
 
 // Renders lightweight quest update notifications on the HUD.
 public final class QuestHudOverlay {
-    // Toggle for quest notifications (placeholder for future config).
-    private static final boolean ENABLED = true;
-
     // Utility class; no instantiation.
     private QuestHudOverlay() {
     }
@@ -25,7 +23,7 @@ public final class QuestHudOverlay {
     // Draw quest notifications after the main HUD renders.
     @SubscribeEvent
     public static void onRenderGui(RenderGuiEvent.Post event) {
-        if (!ENABLED) {
+        if (!QuestClientConfig.hudNotificationsEnabled()) {
             return;
         }
         QuestClientState.QuestNotification notification = QuestClientState.getNotification();
