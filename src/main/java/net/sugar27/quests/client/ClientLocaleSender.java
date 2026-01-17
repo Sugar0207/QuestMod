@@ -6,10 +6,12 @@ import net.minecraft.client.Minecraft;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.sugar27.quests.network.ClientLanguagePacket;
+import net.sugar27.quests.network.QuestSyncRequestPacket;
 
-// Sends the client locale to the server once after login.
+// Sends the client locale to the server and requests sync when it changes.
 public final class ClientLocaleSender {
     private static boolean sent = false;
+    private static String lastLocale = "";
 
     // Utility class; no instantiation.
     private ClientLocaleSender() {
@@ -20,13 +22,19 @@ public final class ClientLocaleSender {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.player == null) {
             sent = false;
-            return;
-        }
-        if (sent) {
+            lastLocale = "";
             return;
         }
         String locale = minecraft.getLanguageManager().getSelected();
+        if (locale == null) {
+            locale = "";
+        }
+        if (sent && locale.equals(lastLocale)) {
+            return;
+        }
         ClientPacketDistributor.sendToServer(new ClientLanguagePacket(locale));
+        ClientPacketDistributor.sendToServer(new QuestSyncRequestPacket());
         sent = true;
+        lastLocale = locale;
     }
 }
