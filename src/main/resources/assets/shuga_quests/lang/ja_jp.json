@@ -38,5 +38,6 @@
   "quest.reward.effect": "効果: %s（%s 秒）",
   "quest.reward.command": "コマンド",
   "quest.reward.advancement": "実績: %s",
-  "quest.reward.unknown": "不明"
+  "quest.reward.unknown": "不明",
+  "screen.shuga_quests.stop": "??????"
 }

@@ -46,6 +46,11 @@ public final class NetworkHandler {
                 Objects.requireNonNull(QuestStartPacket.STREAM_CODEC),
                 QuestStartPacket::handle
         );
+        registrar.playToServer(
+                Objects.requireNonNull(QuestStopPacket.TYPE),
+                Objects.requireNonNull(QuestStopPacket.STREAM_CODEC),
+                QuestStopPacket::handle
+        );
     }
 
     // Send a full sync payload to a player.

@@ -86,6 +86,9 @@ public final class DailyQuestManager {
         ServerLevel level = server.overworld();
         DailyQuestData data = DailyQuestData.get(level);
         String today = LocalDate.now(ZoneOffset.UTC).toString();
+        if (!force && today.equals(data.date)) {
+            return;
+        }
         data.date = today;
         data.questIds.clear();
 

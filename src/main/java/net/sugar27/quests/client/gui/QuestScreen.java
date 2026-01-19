@@ -11,6 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.sugar27.quests.client.QuestClientState;
 import net.sugar27.quests.network.QuestStartPacket;
+import net.sugar27.quests.network.QuestStopPacket;
 import net.sugar27.quests.quest.QuestCategory;
 import net.sugar27.quests.quest.QuestCriteria;
 import net.sugar27.quests.quest.QuestDefinition;
@@ -91,7 +92,12 @@ public class QuestScreen extends Screen {
         @Nonnull Component startLabel = Objects.requireNonNull(Component.translatable("screen.shuga_quests.start"));
         startButton = Button.builder(startLabel, button -> {
             if (!selectedQuestId.isEmpty()) {
-                ClientPacketDistributor.sendToServer(new QuestStartPacket(selectedQuestId));
+                String activeQuestId = QuestClientState.getActiveQuestId();
+                if (activeQuestId != null && !activeQuestId.isEmpty() && activeQuestId.equals(selectedQuestId)) {
+                    ClientPacketDistributor.sendToServer(new QuestStopPacket(selectedQuestId));
+                } else {
+                    ClientPacketDistributor.sendToServer(new QuestStartPacket(selectedQuestId));
+                }
             }
         }).bounds(DETAIL_X, DETAIL_Y + START_BUTTON_Y_OFFSET, START_BUTTON_WIDTH, START_BUTTON_HEIGHT).build();
         addRenderableWidget(startButton);
@@ -124,25 +130,40 @@ public class QuestScreen extends Screen {
 
         int listX = 20;
         int listY = 50;
-        int lineHeight = 12;
+        float titleScale = getListTitleScale(font);
+        int lineHeight = getListLineHeight(font);
 
         String activeQuestId = QuestClientState.getActiveQuestId();
         int index = 0;
         for (QuestDefinition quest : filteredQuests) {
             int y = listY + index * lineHeight;
+            int scaledLineHeight = (int) Math.ceil(font.lineHeight * titleScale);
+            int textY = y + (lineHeight - scaledLineHeight) / 2;
             boolean isDaily = dailyQuestIds.contains(quest.id());
-            int color = quest.id().equals(selectedQuestId)
-                    ? 0xFFFFE080
-                    : quest.id().equals(activeQuestId)
+            boolean isSelected = quest.id().equals(selectedQuestId);
+            boolean isActive = quest.id().equals(activeQuestId);
+            if (isSelected) {
+                int highlightLeft = listX - 2;
+                int highlightRight = listX + 178;
+                graphics.fill(highlightLeft, y, highlightRight, y + lineHeight - 1, 0x402D3446);
+            }
+            int color = isSelected
+                    ? (isActive ? 0xFFB8FFB8 : 0xFFFFE080)
+                    : isActive
                         ? 0xFF80FF80
                     : isDaily
                         ? 0xFFFFC040
                         : 0xFFFFFFFF;
             Component title = Component.translatable(Objects.requireNonNull(quest.titleKey()));
-            Component line = isDaily
-                    ? Component.literal("[").append(Component.translatable("screen.shuga_quests.daily_tag")).append("] ").append(title)
-                    : title;
-            graphics.drawString(font, Objects.requireNonNull(line), listX, y, color);
+            Component line = title;
+            if (isDaily) {
+                line = Component.literal("[").append(Component.translatable("screen.shuga_quests.daily_tag")).append("] ").append(line);
+            }
+            graphics.pose().pushMatrix();
+            graphics.pose().translate(listX, textY);
+            graphics.pose().scale(titleScale, titleScale);
+            graphics.drawString(font, Objects.requireNonNull(line), 0, 0, color);
+            graphics.pose().popMatrix();
             index++;
         }
 
@@ -227,9 +248,10 @@ public class QuestScreen extends Screen {
     // Handle list selection by mouse click.
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        Font font = Objects.requireNonNull(this.font);
         int listX = 20;
         int listY = 50;
-        int lineHeight = 12;
+        int lineHeight = getListLineHeight(font);
         if (mouseX >= listX && mouseX <= listX + 180 && mouseY >= listY) {
             int index = (int) ((mouseY - listY) / lineHeight);
             if (index >= 0 && index < filteredQuests.size()) {
@@ -257,6 +279,12 @@ public class QuestScreen extends Screen {
         return false;
     }
 
+    @Override
+    public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        super.renderBackground(graphics, mouseX, mouseY, partialTick);
+        graphics.fill(0, 0, this.width, this.height, 0x80000000);
+    }
+
     private void updateStartButtonState(QuestDefinition selectedQuest, boolean selectedDaily) {
         if (startButton == null) {
             return;
@@ -272,7 +300,11 @@ public class QuestScreen extends Screen {
             return;
         }
         String activeQuestId = QuestClientState.getActiveQuestId();
-        startButton.active = activeQuestId == null || activeQuestId.isEmpty();
+        boolean isActiveQuest = activeQuestId != null && !activeQuestId.isEmpty() && activeQuestId.equals(selectedQuest.id());
+        startButton.active = activeQuestId == null || activeQuestId.isEmpty() || isActiveQuest;
+        startButton.setMessage(Objects.requireNonNull(Component.translatable(
+                isActiveQuest ? "screen.shuga_quests.stop" : "screen.shuga_quests.start"
+        )));
     }
 
     private Component getObjectiveProgressComponent(QuestObjective objective, QuestProgress progress) {
@@ -316,5 +348,15 @@ public class QuestScreen extends Screen {
 
     private String getObjectiveTranslationKey(QuestObjective objective) {
         return "quest.objective." + objective.id();
+    }
+
+    private int getListLineHeight(Font font) {
+        float titleScale = getListTitleScale(font);
+        int scaledLineHeight = (int) Math.ceil(font.lineHeight * titleScale);
+        return scaledLineHeight + 3;
+    }
+
+    private float getListTitleScale(Font font) {
+        return (font.lineHeight + 2.0f) / font.lineHeight;
     }
 }
