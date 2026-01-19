@@ -41,10 +41,15 @@ public final class NetworkHandler {
                 Objects.requireNonNull(ClientLanguagePacket.STREAM_CODEC),
                 ClientLanguagePacket::handle
         );
+        registrar.playToServer(
+                Objects.requireNonNull(QuestStartPacket.TYPE),
+                Objects.requireNonNull(QuestStartPacket.STREAM_CODEC),
+                QuestStartPacket::handle
+        );
     }
 
     // Send a full sync payload to a player.
-    public static void sendFullSync(@Nonnull ServerPlayer player, List<QuestDefinition> definitions, List<QuestProgress> progresses, List<String> daily) {
+    public static void sendFullSync(@Nonnull ServerPlayer player, List<QuestDefinition> definitions, List<QuestProgress> progresses, List<String> daily, String activeQuestId) {
         String locale = PlayerLocaleStore.getLocale(player.getUUID());
         QuestSyncPacket payload = new QuestSyncPacket(
                 QuestSyncPacket.SyncType.FULL,
@@ -52,13 +57,14 @@ public final class NetworkHandler {
                 progresses,
                 daily,
                 "",
-                QuestSyncPacket.NotificationType.NONE
+                QuestSyncPacket.NotificationType.NONE,
+                activeQuestId
         );
         PacketDistributor.sendToPlayer(Objects.requireNonNull(player), payload);
     }
 
     // Send a delta sync payload to a player.
-    public static void sendDeltaSync(@Nonnull ServerPlayer player, QuestDefinition definition, QuestProgress progress, QuestSyncPacket.NotificationType notificationType) {
+    public static void sendDeltaSync(@Nonnull ServerPlayer player, QuestDefinition definition, QuestProgress progress, QuestSyncPacket.NotificationType notificationType, String activeQuestId) {
         String locale = PlayerLocaleStore.getLocale(player.getUUID());
         QuestSyncPacket payload = new QuestSyncPacket(
                 QuestSyncPacket.SyncType.DELTA,
@@ -66,7 +72,8 @@ public final class NetworkHandler {
                 List.of(progress),
                 List.of(),
                 definition.id(),
-                notificationType
+                notificationType,
+                activeQuestId
         );
         PacketDistributor.sendToPlayer(Objects.requireNonNull(player), payload);
     }

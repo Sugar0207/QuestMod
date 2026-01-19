@@ -38,9 +38,16 @@ public final class QuestProgressManager {
         }
 
         QuestProgressData data = QuestProgressData.get(server.overworld());
+        String activeQuestId = data.getActiveQuestId(player.getUUID());
+        if (activeQuestId == null || activeQuestId.isEmpty()) {
+            return;
+        }
         boolean dirty = false;
 
         for (QuestDefinition quest : quests) {
+            if (!quest.id().equals(activeQuestId)) {
+                continue;
+            }
             QuestProgress progress = data.getOrCreateProgress(player.getUUID(), quest.id());
             if (progress.isCompleted() && !quest.repeatable()) {
                 continue;
@@ -73,12 +80,16 @@ public final class QuestProgressManager {
                 dirty = true;
                 if (!progress.isCompleted() && isQuestComplete(quest, progress)) {
                     progress.markCompleted();
+                    if (quest.id().equals(activeQuestId)) {
+                        data.setActiveQuestId(player.getUUID(), "");
+                        activeQuestId = "";
+                    }
                     if (!progress.rewardsGranted()) {
                         grantRewards(player, quest, progress);
                     }
-                    NetworkHandler.sendDeltaSync(player, quest, progress, QuestSyncPacket.NotificationType.COMPLETED);
+                    NetworkHandler.sendDeltaSync(player, quest, progress, QuestSyncPacket.NotificationType.COMPLETED, activeQuestId);
                 } else {
-                    NetworkHandler.sendDeltaSync(player, quest, progress, QuestSyncPacket.NotificationType.UPDATED);
+                    NetworkHandler.sendDeltaSync(player, quest, progress, QuestSyncPacket.NotificationType.UPDATED, activeQuestId);
                 }
             }
         }
@@ -98,7 +109,7 @@ public final class QuestProgressManager {
         QuestProgressData data = QuestProgressData.get(server.overworld());
         List<QuestProgress> progressList = new ArrayList<>(data.getPlayerProgress(player.getUUID()).values());
         List<String> daily = DailyQuestManager.get().getDailyQuestIds(server);
-        NetworkHandler.sendFullSync(player, questManager.getAll().values().stream().toList(), progressList, daily);
+        NetworkHandler.sendFullSync(player, questManager.getAll().values().stream().toList(), progressList, daily, data.getActiveQuestId(player.getUUID()));
     }
 
     // Sync quest data to all connected players.
@@ -174,7 +185,12 @@ public final class QuestProgressManager {
             }
         }
         data.setDirty();
-        NetworkHandler.sendDeltaSync(player, quest, progress, QuestSyncPacket.NotificationType.COMPLETED);
+        String activeQuestId = data.getActiveQuestId(player.getUUID());
+        if (quest.id().equals(activeQuestId)) {
+            data.setActiveQuestId(player.getUUID(), "");
+            activeQuestId = "";
+        }
+        NetworkHandler.sendDeltaSync(player, quest, progress, QuestSyncPacket.NotificationType.COMPLETED, activeQuestId);
     }
 
     // Force-complete all quests for a player.
@@ -191,13 +207,42 @@ public final class QuestProgressManager {
             return;
         }
         QuestProgressData data = QuestProgressData.get(server.overworld());
+        String activeQuestId = data.getActiveQuestId(player.getUUID());
         if (questId == null || questId.isEmpty()) {
             data.getPlayerProgress(player.getUUID()).clear();
+            data.setActiveQuestId(player.getUUID(), "");
         } else {
             data.getPlayerProgress(player.getUUID()).remove(questId);
+            if (questId.equals(activeQuestId)) {
+                data.setActiveQuestId(player.getUUID(), "");
+            }
         }
         data.setDirty();
         syncFull(player);
+    }
+
+    // Start a quest for a player, enforcing only one active quest.
+    public void startQuest(ServerPlayer player, String questId) {
+        MinecraftServer server = player.getServer();
+        if (server == null) {
+            return;
+        }
+        QuestDefinition quest = QuestManager.get().getQuest(questId);
+        if (quest == null) {
+            return;
+        }
+        QuestProgressData data = QuestProgressData.get(server.overworld());
+        String activeQuestId = data.getActiveQuestId(player.getUUID());
+        if (activeQuestId != null && !activeQuestId.isEmpty() && !activeQuestId.equals(quest.id())) {
+            return;
+        }
+        QuestProgress progress = data.getOrCreateProgress(player.getUUID(), quest.id());
+        if (progress.isCompleted() && !quest.repeatable()) {
+            return;
+        }
+        data.setActiveQuestId(player.getUUID(), quest.id());
+        data.setDirty();
+        NetworkHandler.sendDeltaSync(player, quest, progress, QuestSyncPacket.NotificationType.NONE, quest.id());
     }
 
     // Persistent saved data for all player progress.
@@ -210,6 +255,7 @@ public final class QuestProgressManager {
         public static final SavedDataType<QuestProgressData> TYPE = Objects.requireNonNull(new SavedDataType<>(DATA_NAME, QuestProgressData::new, CODEC));
 
         private final Map<UUID, Map<String, QuestProgress>> playerProgress = new HashMap<>();
+        private final Map<UUID, String> activeQuestIds = new HashMap<>();
 
         // Create a new progress data entry.
         public QuestProgressData() {
@@ -233,6 +279,10 @@ public final class QuestProgressManager {
                     quests.put(progress.questId(), progress);
                 }
                 data.playerProgress.put(uuid, quests);
+                String activeQuestId = playerTag.getStringOr("activeQuestId", "");
+                if (!activeQuestId.isEmpty()) {
+                    data.activeQuestIds.put(uuid, activeQuestId);
+                }
             }
             return data;
         }
@@ -249,6 +299,10 @@ public final class QuestProgressManager {
                     questTags.add(progress.saveToTag());
                 }
                 playerTag.put("quests", questTags);
+                String activeQuestId = activeQuestIds.getOrDefault(entry.getKey(), "");
+                if (!activeQuestId.isEmpty()) {
+                    playerTag.putString("activeQuestId", Objects.requireNonNull(activeQuestId));
+                }
                 players.add(playerTag);
             }
             tag.put("players", players);
@@ -269,6 +323,18 @@ public final class QuestProgressManager {
         // Get progress map for a player.
         public Map<String, QuestProgress> getPlayerProgress(UUID playerId) {
             return playerProgress.computeIfAbsent(playerId, key -> new HashMap<>());
+        }
+
+        public String getActiveQuestId(UUID playerId) {
+            return activeQuestIds.getOrDefault(playerId, "");
+        }
+
+        public void setActiveQuestId(UUID playerId, String questId) {
+            if (questId == null || questId.isEmpty()) {
+                activeQuestIds.remove(playerId);
+            } else {
+                activeQuestIds.put(playerId, questId);
+            }
         }
     }
 }

@@ -8,7 +8,9 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.sugar27.quests.client.QuestClientState;
+import net.sugar27.quests.network.QuestStartPacket;
 import net.sugar27.quests.quest.QuestCategory;
 import net.sugar27.quests.quest.QuestCriteria;
 import net.sugar27.quests.quest.QuestDefinition;
@@ -24,9 +26,16 @@ import java.util.Objects;
 
 // Main quest UI for browsing categories, list, and details.
 public class QuestScreen extends Screen {
+    private static final int DETAIL_X = 220;
+    private static final int DETAIL_Y = 50;
+    private static final int START_BUTTON_WIDTH = 90;
+    private static final int START_BUTTON_HEIGHT = 20;
+    private static final int START_BUTTON_Y_OFFSET = 42;
+
     private QuestCategory selectedCategory = QuestCategory.ALL;
     private String selectedQuestId = "";
     private boolean showDailyOnly = false;
+    private Button startButton;
 
     private final List<QuestDefinition> filteredQuests = new ArrayList<>();
 
@@ -79,6 +88,14 @@ public class QuestScreen extends Screen {
             refreshFiltered();
         }).bounds(x + buttonStep * 4, y, buttonWidth, buttonHeight).build()));
 
+        @Nonnull Component startLabel = Objects.requireNonNull(Component.translatable("screen.shuga_quests.start"));
+        startButton = Button.builder(startLabel, button -> {
+            if (!selectedQuestId.isEmpty()) {
+                ClientPacketDistributor.sendToServer(new QuestStartPacket(selectedQuestId));
+            }
+        }).bounds(DETAIL_X, DETAIL_Y + START_BUTTON_Y_OFFSET, START_BUTTON_WIDTH, START_BUTTON_HEIGHT).build();
+        addRenderableWidget(startButton);
+
         refreshFiltered();
     }
 
@@ -88,6 +105,9 @@ public class QuestScreen extends Screen {
         var questDefinitions = QuestClientState.getQuestDefinitions();
         refreshFiltered();
         List<String> dailyQuestIds = QuestClientState.getDailyQuestIds();
+        QuestDefinition selectedQuest = selectedQuestId.isEmpty() ? null : questDefinitions.get(selectedQuestId);
+        boolean selectedDaily = selectedQuest != null && dailyQuestIds.contains(selectedQuest.id());
+        updateStartButtonState(selectedQuest, selectedDaily);
 
         // Call super.render first so that the screen background and widgets are
         // rendered by the parent implementation. Some vanilla implementations
@@ -106,12 +126,15 @@ public class QuestScreen extends Screen {
         int listY = 50;
         int lineHeight = 12;
 
+        String activeQuestId = QuestClientState.getActiveQuestId();
         int index = 0;
         for (QuestDefinition quest : filteredQuests) {
             int y = listY + index * lineHeight;
             boolean isDaily = dailyQuestIds.contains(quest.id());
             int color = quest.id().equals(selectedQuestId)
                     ? 0xFFFFE080
+                    : quest.id().equals(activeQuestId)
+                        ? 0xFF80FF80
                     : isDaily
                         ? 0xFFFFC040
                         : 0xFFFFFFFF;
@@ -136,8 +159,8 @@ public class QuestScreen extends Screen {
             return;
         }
 
-        int detailX = 220;
-        int detailY = 50;
+        int detailX = DETAIL_X;
+        int detailY = DETAIL_Y;
         boolean isDaily = QuestClientState.getDailyQuestIds().contains(quest.id());
         Font font = Objects.requireNonNull(this.font);
         if (isDaily) {
@@ -155,7 +178,7 @@ public class QuestScreen extends Screen {
                     : Component.translatable("screen.shuga_quests.status.in_progress");
         graphics.drawString(font, Objects.requireNonNull(status), detailX, detailY + 30, 0xFF80FF80);
 
-        int offsetY = detailY + 50;
+        int offsetY = detailY + 50 + START_BUTTON_HEIGHT;
         graphics.drawString(font, Objects.requireNonNull(Component.translatable("screen.shuga_quests.objectives")), detailX, offsetY, 0xFFFFFFFF);
         offsetY += 12;
         for (QuestObjective objective : quest.objectives()) {
@@ -232,6 +255,24 @@ public class QuestScreen extends Screen {
     @Override
     public boolean isPauseScreen() {
         return false;
+    }
+
+    private void updateStartButtonState(QuestDefinition selectedQuest, boolean selectedDaily) {
+        if (startButton == null) {
+            return;
+        }
+        startButton.setY(DETAIL_Y + (selectedDaily ? 12 : 0) + START_BUTTON_Y_OFFSET);
+        if (selectedQuest == null) {
+            startButton.active = false;
+            return;
+        }
+        QuestProgress progress = QuestClientState.getQuestProgress().get(selectedQuest.id());
+        if (progress != null && progress.isCompleted()) {
+            startButton.active = false;
+            return;
+        }
+        String activeQuestId = QuestClientState.getActiveQuestId();
+        startButton.active = activeQuestId == null || activeQuestId.isEmpty();
     }
 
     private Component getObjectiveProgressComponent(QuestObjective objective, QuestProgress progress) {

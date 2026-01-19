@@ -21,6 +21,7 @@ public final class QuestClientState {
     private static final Map<String, QuestDefinition> QUEST_DEFINITIONS = new HashMap<>();
     private static final Map<String, QuestProgress> QUEST_PROGRESS = new HashMap<>();
     private static final List<String> DAILY_QUESTS = new ArrayList<>();
+    private static String activeQuestId = "";
 
     private static String notificationQuestId = "";
     private static QuestSyncPacket.NotificationType notificationType = QuestSyncPacket.NotificationType.NONE;
@@ -51,6 +52,7 @@ public final class QuestClientState {
             DAILY_QUESTS.clear();
             DAILY_QUESTS.addAll(packet.dailyQuestIds());
         }
+        activeQuestId = packet.activeQuestId();
 
         if (packet.notificationType() != QuestSyncPacket.NotificationType.NONE
                 && QuestClientConfig.hudNotificationsEnabled()) {
@@ -74,6 +76,11 @@ public final class QuestClientState {
     // Get the current daily quest ids.
     public static List<String> getDailyQuestIds() {
         return Collections.unmodifiableList(DAILY_QUESTS);
+    }
+
+    // Get the currently active quest id.
+    public static String getActiveQuestId() {
+        return activeQuestId;
     }
 
     // Get the current notification, clearing it if expired.

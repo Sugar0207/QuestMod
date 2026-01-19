@@ -23,7 +23,8 @@ public record QuestSyncPacket(
         List<QuestProgress> questProgresses,
         List<String> dailyQuestIds,
         String notificationQuestId,
-        NotificationType notificationType
+        NotificationType notificationType,
+        String activeQuestId
 ) implements CustomPacketPayload {
     public static final Type<QuestSyncPacket> TYPE = new Type<>(
             Objects.requireNonNull(ResourceLocation.fromNamespaceAndPath(ShugaQuestsMod.MODID, "quest_sync"))
@@ -60,6 +61,7 @@ public record QuestSyncPacket(
         }
         buf.writeUtf(Objects.requireNonNull(Objects.requireNonNullElse(payload.notificationQuestId, "")));
         buf.writeEnum(Objects.requireNonNull(payload.notificationType));
+        buf.writeUtf(Objects.requireNonNull(Objects.requireNonNullElse(payload.activeQuestId, "")));
     }
 
     // Decode the packet payload.
@@ -82,19 +84,21 @@ public record QuestSyncPacket(
         }
         String notificationQuestId = buf.readUtf();
         NotificationType notificationType = buf.readEnum(NotificationType.class);
-        return new QuestSyncPacket(syncType, definitions, progresses, daily, notificationQuestId, notificationType);
+        String activeQuestId = buf.readUtf();
+        return new QuestSyncPacket(syncType, definitions, progresses, daily, notificationQuestId, notificationType, activeQuestId);
     }
 
     // Handle client-side sync processing.
     public static void handle(QuestSyncPacket payload, IPayloadContext context) {
         context.enqueueWork(() -> {
             ShugaQuestsMod.LOGGER.info(
-                    "Quest sync received: type={}, defs={}, progress={}, daily={}, notification={}",
+                    "Quest sync received: type={}, defs={}, progress={}, daily={}, notification={}, active={}",
                     payload.syncType(),
                     payload.questDefinitions().size(),
                     payload.questProgresses().size(),
                     payload.dailyQuestIds().size(),
-                    payload.notificationType()
+                    payload.notificationType(),
+                    payload.activeQuestId()
             );
             QuestClientState.applySync(payload);
         });
