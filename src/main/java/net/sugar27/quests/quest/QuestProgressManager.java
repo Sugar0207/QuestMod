@@ -233,16 +233,22 @@ public final class QuestProgressManager {
         }
         QuestProgressData data = QuestProgressData.get(server.overworld());
         String activeQuestId = data.getActiveQuestId(player.getUUID());
-        if (activeQuestId != null && !activeQuestId.isEmpty() && !activeQuestId.equals(quest.id())) {
-            return;
-        }
         QuestProgress progress = data.getOrCreateProgress(player.getUUID(), quest.id());
         if (progress.isCompleted() && !quest.repeatable()) {
             return;
         }
+        boolean switchedQuest = activeQuestId != null && !activeQuestId.isEmpty() && !activeQuestId.equals(quest.id());
+        if (switchedQuest) {
+            data.getPlayerProgress(player.getUUID()).remove(activeQuestId);
+            data.setActiveQuestId(player.getUUID(), "");
+        }
         data.setActiveQuestId(player.getUUID(), quest.id());
         data.setDirty();
-        NetworkHandler.sendDeltaSync(player, quest, progress, QuestSyncPacket.NotificationType.NONE, quest.id());
+        if (switchedQuest) {
+            syncFull(player);
+        } else {
+            NetworkHandler.sendDeltaSync(player, quest, progress, QuestSyncPacket.NotificationType.NONE, quest.id());
+        }
     }
 
     /**

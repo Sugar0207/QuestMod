@@ -11,6 +11,8 @@
   "screen.shuga_quests.stop": "Stop Quest",
   "screen.shuga_quests.stop_confirm.title": "Stop Quest?",
   "screen.shuga_quests.stop_confirm.message": "Stopping %s will reset its progress. Continue?",
+  "screen.shuga_quests.start_confirm.title": "Start Quest?",
+  "screen.shuga_quests.start_confirm.message": "Another quest (%s) is in progress.\nStarting this quest will reset its progress. Continue?",
   "screen.shuga_quests.daily_tag": "Daily",
   "screen.shuga_quests.daily_label": "Daily Quest",
   "screen.shuga_quests.status.complete": "Complete",

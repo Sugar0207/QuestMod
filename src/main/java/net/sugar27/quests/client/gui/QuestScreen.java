@@ -95,6 +95,8 @@ public class QuestScreen extends Screen {
                 String activeQuestId = QuestClientState.getActiveQuestId();
                 if (activeQuestId != null && !activeQuestId.isEmpty() && activeQuestId.equals(selectedQuestId)) {
                     openStopConfirm(selectedQuestId);
+                } else if (activeQuestId != null && !activeQuestId.isEmpty()) {
+                    openStartOverrideConfirm(activeQuestId, selectedQuestId);
                 } else {
                     ClientPacketDistributor.sendToServer(new QuestStartPacket(selectedQuestId));
                 }
@@ -301,7 +303,7 @@ public class QuestScreen extends Screen {
         }
         String activeQuestId = QuestClientState.getActiveQuestId();
         boolean isActiveQuest = activeQuestId != null && !activeQuestId.isEmpty() && activeQuestId.equals(selectedQuest.id());
-        startButton.active = activeQuestId == null || activeQuestId.isEmpty() || isActiveQuest;
+        startButton.active = true;
         startButton.setMessage(Objects.requireNonNull(Component.translatable(
                 isActiveQuest ? "screen.shuga_quests.stop" : "screen.shuga_quests.start"
         )));
@@ -321,6 +323,25 @@ public class QuestScreen extends Screen {
         QuestConfirmOverlayScreen confirmScreen = new QuestConfirmOverlayScreen(this, confirmed -> {
             if (confirmed) {
                 ClientPacketDistributor.sendToServer(new QuestStopPacket(questId));
+            }
+        }, title, message);
+        minecraft.setScreen(confirmScreen);
+    }
+
+    private void openStartOverrideConfirm(String activeQuestId, String newQuestId) {
+        Minecraft minecraft = this.minecraft;
+        if (minecraft == null) {
+            return;
+        }
+        QuestDefinition activeQuest = QuestClientState.getQuestDefinitions().get(activeQuestId);
+        Component activeTitle = activeQuest == null || activeQuest.titleKey() == null
+                ? Component.literal(activeQuestId)
+                : Component.translatable(Objects.requireNonNull(activeQuest.titleKey()));
+        Component title = Component.translatable("screen.shuga_quests.start_confirm.title");
+        Component message = Component.translatable("screen.shuga_quests.start_confirm.message", activeTitle);
+        QuestConfirmOverlayScreen confirmScreen = new QuestConfirmOverlayScreen(this, confirmed -> {
+            if (confirmed) {
+                ClientPacketDistributor.sendToServer(new QuestStartPacket(newQuestId));
             }
         }, title, message);
         minecraft.setScreen(confirmScreen);

@@ -20,6 +20,7 @@ import java.util.List;
 // Confirmation dialog rendered on top of a parent screen.
 public class QuestConfirmOverlayScreen extends Screen {
     private static final int MESSAGE_MAX_ROWS = 15;
+    private static final int MESSAGE_LINE_SPACING = 3;
     private static final int PANEL_COLOR = 0xC0000000;
     private final Screen parent;
     private final Component message;
@@ -167,7 +168,7 @@ public class QuestConfirmOverlayScreen extends Screen {
                 FormattedCharSequence line = lines.get(i);
                 int lineX = centerX - this.font.width(line) / 2;
                 graphics.drawString(this.font, line, lineX, y, 0xFFFFFFFF, true);
-                y += this.font.lineHeight;
+                y += this.font.lineHeight + MESSAGE_LINE_SPACING;
             }
         }
     }

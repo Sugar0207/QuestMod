@@ -11,6 +11,8 @@
   "screen.shuga_quests.stop": "クエスト停止",
   "screen.shuga_quests.stop_confirm.title": "クエストを停止しますか？",
   "screen.shuga_quests.stop_confirm.message": "%s を停止すると進行度がリセットされます。続行しますか？",
+  "screen.shuga_quests.start_confirm.title": "クエストを開始しますか？",
+  "screen.shuga_quests.start_confirm.message": "別のクエスト（%s）が進行中です。\nこのクエストを始めると進行がリセットされます。続行しますか？",
   "screen.shuga_quests.daily_tag": "デイリー",
   "screen.shuga_quests.daily_label": "デイリークエスト",
   "screen.shuga_quests.status.complete": "完了",
