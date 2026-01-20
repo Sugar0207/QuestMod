@@ -94,7 +94,7 @@ public class QuestScreen extends Screen {
             if (!selectedQuestId.isEmpty()) {
                 String activeQuestId = QuestClientState.getActiveQuestId();
                 if (activeQuestId != null && !activeQuestId.isEmpty() && activeQuestId.equals(selectedQuestId)) {
-                    ClientPacketDistributor.sendToServer(new QuestStopPacket(selectedQuestId));
+                    openStopConfirm(selectedQuestId);
                 } else {
                     ClientPacketDistributor.sendToServer(new QuestStartPacket(selectedQuestId));
                 }
@@ -305,6 +305,25 @@ public class QuestScreen extends Screen {
         startButton.setMessage(Objects.requireNonNull(Component.translatable(
                 isActiveQuest ? "screen.shuga_quests.stop" : "screen.shuga_quests.start"
         )));
+    }
+
+    private void openStopConfirm(String questId) {
+        Minecraft minecraft = this.minecraft;
+        if (minecraft == null) {
+            return;
+        }
+        QuestDefinition quest = QuestClientState.getQuestDefinitions().get(questId);
+        Component questTitle = quest == null || quest.titleKey() == null
+                ? Component.literal(questId)
+                : Component.translatable(Objects.requireNonNull(quest.titleKey()));
+        Component title = Component.translatable("screen.shuga_quests.stop_confirm.title");
+        Component message = Component.translatable("screen.shuga_quests.stop_confirm.message", questTitle);
+        QuestConfirmOverlayScreen confirmScreen = new QuestConfirmOverlayScreen(this, confirmed -> {
+            if (confirmed) {
+                ClientPacketDistributor.sendToServer(new QuestStopPacket(questId));
+            }
+        }, title, message);
+        minecraft.setScreen(confirmScreen);
     }
 
     private Component getObjectiveProgressComponent(QuestObjective objective, QuestProgress progress) {

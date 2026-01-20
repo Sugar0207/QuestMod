@@ -245,7 +245,7 @@ public final class QuestProgressManager {
         NetworkHandler.sendDeltaSync(player, quest, progress, QuestSyncPacket.NotificationType.NONE, quest.id());
     }
 
-    // Stop tracking a quest without clearing progress.
+    // Stop tracking a quest and clear its progress.
     public void stopQuest(ServerPlayer player, String questId) {
         MinecraftServer server = player.getServer();
         if (server == null || questId == null || questId.isEmpty()) {
@@ -260,10 +260,10 @@ public final class QuestProgressManager {
         if (!quest.id().equals(activeQuestId)) {
             return;
         }
-        QuestProgress progress = data.getOrCreateProgress(player.getUUID(), quest.id());
+        data.getPlayerProgress(player.getUUID()).remove(quest.id());
         data.setActiveQuestId(player.getUUID(), "");
         data.setDirty();
-        NetworkHandler.sendDeltaSync(player, quest, progress, QuestSyncPacket.NotificationType.NONE, "");
+        syncFull(player);
     }
 
     // Persistent saved data for all player progress.
