@@ -245,7 +245,20 @@ public final class QuestProgressManager {
         NetworkHandler.sendDeltaSync(player, quest, progress, QuestSyncPacket.NotificationType.NONE, quest.id());
     }
 
-    // Stop tracking a quest and clear its progress.
+    /**
+     * Stops tracking the given quest for the player and clears any stored progress for it.
+     * <p>
+     * This will only take effect if the specified quest is currently the player's active quest.
+     * When invoked, the quest's progress entry is removed from persistent storage and the
+     * player's active quest id is reset.
+     * <p>
+     * Note: In earlier versions this operation only deactivated tracking and left the stored
+     * progress intact. Callers relying on that behavior should use a different mechanism if
+     * they need to preserve progress.
+     *
+     * @param player the player whose quest should be stopped
+     * @param questId the id of the quest to stop and clear
+     */
     public void stopQuest(ServerPlayer player, String questId) {
         MinecraftServer server = player.getServer();
         if (server == null || questId == null || questId.isEmpty()) {
