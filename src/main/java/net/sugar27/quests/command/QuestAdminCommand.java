@@ -15,24 +15,24 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.sugar27.quests.quest.DailyQuestManager;
 import net.sugar27.quests.quest.QuestManager;
 import net.sugar27.quests.quest.QuestProgressManager;
+import net.sugar27.quests.quest.QuestDefinition;
 import net.sugar27.quests.server.lang.LangManager;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 // Handles the /questadmin command tree.
 public final class QuestAdminCommand {
+    private static final String ALL_QUESTS_TOKEN = "all";
+    private static final String EMPTY_QUEST_ID = "";
     private static final QuestProgressManager PROGRESS_MANAGER = new QuestProgressManager();
     private static final SuggestionProvider<CommandSourceStack> QUEST_ID_SUGGESTIONS = (context, builder) -> {
-        var ids = new ArrayList<>(QuestManager.get().getAll().keySet());
-        ids.sort(String::compareToIgnoreCase);
-        return SharedSuggestionProvider.suggest(ids, builder);
+        return SharedSuggestionProvider.suggest(getSortedQuestIds(false), builder);
     };
     private static final SuggestionProvider<CommandSourceStack> QUEST_ID_OR_ALL_SUGGESTIONS = (context, builder) -> {
-        var ids = new ArrayList<>(QuestManager.get().getAll().keySet());
-        ids.add("all");
-        ids.sort(String::compareToIgnoreCase);
-        return SharedSuggestionProvider.suggest(ids, builder);
+        return SharedSuggestionProvider.suggest(getSortedQuestIds(true), builder);
     };
 
     // Utility class; no instantiation.
@@ -66,7 +66,7 @@ public final class QuestAdminCommand {
                                             Objects.requireNonNull(context);
                                             ServerPlayer player = EntityArgument.getPlayer(context, "player");
                                             String questId = StringArgumentType.getString(context, "quest_id");
-                                            if ("all".equalsIgnoreCase(questId)) {
+                                            if (ALL_QUESTS_TOKEN.equalsIgnoreCase(questId)) {
                                                 PROGRESS_MANAGER.grantAllQuests(player);
                                             } else {
                                                 PROGRESS_MANAGER.grantQuest(player, questId);
@@ -82,8 +82,7 @@ public final class QuestAdminCommand {
                                         () -> Component.translatable("command.shuga_quests.list_empty"), false);
                                 return 1;
                             }
-                            var ids = new ArrayList<>(quests.keySet());
-                            ids.sort(String::compareToIgnoreCase);
+                            var ids = getSortedQuestIds(quests, false);
                             context.getSource().sendSuccess(
                                     () -> Component.translatable("command.shuga_quests.list_header", ids.size()), false);
                             for (String id : ids) {
@@ -96,7 +95,7 @@ public final class QuestAdminCommand {
                                 .executes(context -> {
                                     Objects.requireNonNull(context);
                                     ServerPlayer player = EntityArgument.getPlayer(context, "player");
-                                    PROGRESS_MANAGER.resetQuest(player, "");
+                                    PROGRESS_MANAGER.resetQuest(player, EMPTY_QUEST_ID);
                                     return 1;
                                 })
                                 .then(Commands.argument("quest_id", Objects.requireNonNull(StringArgumentType.string()))
@@ -105,8 +104,8 @@ public final class QuestAdminCommand {
                                             Objects.requireNonNull(context);
                                             ServerPlayer player = EntityArgument.getPlayer(context, "player");
                                             String questId = StringArgumentType.getString(context, "quest_id");
-                                            if ("all".equalsIgnoreCase(questId)) {
-                                                PROGRESS_MANAGER.resetQuest(player, "");
+                                            if (ALL_QUESTS_TOKEN.equalsIgnoreCase(questId)) {
+                                                PROGRESS_MANAGER.resetQuest(player, EMPTY_QUEST_ID);
                                             } else {
                                                 PROGRESS_MANAGER.resetQuest(player, questId);
                                             }
@@ -121,6 +120,19 @@ public final class QuestAdminCommand {
                                     context.getSource().sendSuccess(() -> Component.translatable("command.shuga_quests.daily_reroll"), true);
                                     return 1;
                                 }))));
+    }
+
+    private static List<String> getSortedQuestIds(boolean includeAllToken) {
+        return getSortedQuestIds(QuestManager.get().getAll(), includeAllToken);
+    }
+
+    private static List<String> getSortedQuestIds(Map<String, QuestDefinition> quests, boolean includeAllToken) {
+        var ids = new ArrayList<>(quests.keySet());
+        if (includeAllToken) {
+            ids.add(ALL_QUESTS_TOKEN);
+        }
+        ids.sort(String::compareToIgnoreCase);
+        return ids;
     }
 }
 

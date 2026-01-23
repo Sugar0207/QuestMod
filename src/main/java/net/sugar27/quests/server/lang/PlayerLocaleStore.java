@@ -2,7 +2,6 @@
 
 package net.sugar27.quests.server.lang;
 
-import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,7 +19,7 @@ public final class PlayerLocaleStore {
         if (playerId == null) {
             return;
         }
-        LOCALES.put(playerId, normalizeLocale(locale));
+        LOCALES.put(playerId, LangManager.get().normalizeLocale(locale));
     }
 
     // Get a player's locale selection with fallback to en_us.
@@ -38,10 +37,5 @@ public final class PlayerLocaleStore {
         }
     }
 
-    private static String normalizeLocale(String locale) {
-        if (locale == null || locale.isBlank()) {
-            return LangManager.DEFAULT_LOCALE;
-        }
-        return locale.toLowerCase(Locale.ROOT);
-    }
+ 
 }

@@ -23,6 +23,7 @@ public final class QuestClientState {
     private static final List<String> DAILY_QUESTS = new ArrayList<>();
     private static String activeQuestId = "";
 
+    private static final long NOTIFICATION_DURATION_MS = 5000L;
     private static String notificationQuestId = "";
     private static QuestSyncPacket.NotificationType notificationType = QuestSyncPacket.NotificationType.NONE;
     private static long notificationExpiresAt = 0L;
@@ -46,11 +47,9 @@ public final class QuestClientState {
             QUEST_PROGRESS.put(progress.questId(), progress);
         }
         if (packet.syncType() == QuestSyncPacket.SyncType.FULL) {
-            DAILY_QUESTS.clear();
-            DAILY_QUESTS.addAll(packet.dailyQuestIds());
+            replaceDailyQuestIds(packet.dailyQuestIds());
         } else if (!packet.dailyQuestIds().isEmpty()) {
-            DAILY_QUESTS.clear();
-            DAILY_QUESTS.addAll(packet.dailyQuestIds());
+            replaceDailyQuestIds(packet.dailyQuestIds());
         }
         activeQuestId = packet.activeQuestId();
 
@@ -58,7 +57,7 @@ public final class QuestClientState {
                 && QuestClientConfig.hudNotificationsEnabled()) {
             notificationQuestId = packet.notificationQuestId();
             notificationType = packet.notificationType();
-            notificationExpiresAt = Util.getMillis() + 5000L;
+            notificationExpiresAt = Util.getMillis() + NOTIFICATION_DURATION_MS;
             playNotificationSound(notificationType);
         }
     }
@@ -86,16 +85,14 @@ public final class QuestClientState {
     // Get the current notification, clearing it if expired.
     public static QuestNotification getNotification() {
         if (!QuestClientConfig.hudNotificationsEnabled()) {
-            notificationType = QuestSyncPacket.NotificationType.NONE;
-            notificationQuestId = "";
+            clearNotification();
             return null;
         }
         if (notificationType == QuestSyncPacket.NotificationType.NONE) {
             return null;
         }
         if (Util.getMillis() > notificationExpiresAt) {
-            notificationType = QuestSyncPacket.NotificationType.NONE;
-            notificationQuestId = "";
+            clearNotification();
             return null;
         }
         return new QuestNotification(notificationQuestId, notificationType);
@@ -115,6 +112,16 @@ public final class QuestClientState {
         } else if (type == QuestSyncPacket.NotificationType.UPDATED) {
             minecraft.player.playSound(SoundEvents.UI_TOAST_IN, 1.0F, 1.0F);
         }
+    }
+
+    private static void replaceDailyQuestIds(List<String> dailyQuestIds) {
+        DAILY_QUESTS.clear();
+        DAILY_QUESTS.addAll(dailyQuestIds);
+    }
+
+    private static void clearNotification() {
+        notificationType = QuestSyncPacket.NotificationType.NONE;
+        notificationQuestId = "";
     }
 }
 

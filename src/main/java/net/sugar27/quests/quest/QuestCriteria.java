@@ -5,9 +5,9 @@ package net.sugar27.quests.quest;
 import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.sugar27.quests.util.QuestJsonUtil;
 
 import java.util.Objects;
-
 // Represents a single criteria entry inside an objective.
 public record QuestCriteria(
         QuestCriteriaType type,
@@ -26,13 +26,13 @@ public record QuestCriteria(
 ) {
     // Parse a criteria entry from JSON.
     public static QuestCriteria fromJson(JsonObject json) {
-        QuestCriteriaType type = QuestCriteriaType.fromString(getString(json, "type"));
-        ResourceLocation item = getResource(json, "item");
-        ResourceLocation block = getResource(json, "block");
-        ResourceLocation entity = getResource(json, "entity");
+        QuestCriteriaType type = QuestCriteriaType.fromString(QuestJsonUtil.getString(json, "type"));
+        ResourceLocation item = QuestJsonUtil.getResource(json, "item");
+        ResourceLocation block = QuestJsonUtil.getResource(json, "block");
+        ResourceLocation entity = QuestJsonUtil.getResource(json, "entity");
         int count = json.has("count") ? json.get("count").getAsInt() : 1;
-        ResourceLocation dimension = getResource(json, "dimension");
-        ResourceLocation biome = getResource(json, "biome");
+        ResourceLocation dimension = QuestJsonUtil.getResource(json, "dimension");
+        ResourceLocation biome = QuestJsonUtil.getResource(json, "biome");
         Double yMin = json.has("y_min") ? json.get("y_min").getAsDouble() : null;
         Double yMax = json.has("y_max") ? json.get("y_max").getAsDouble() : null;
         double x = json.has("x") ? json.get("x").getAsDouble() : 0D;
@@ -98,18 +98,6 @@ public record QuestCriteria(
         return new QuestCriteria(type, item, block, entity, count, dimension, biome, yMin, yMax, x, y, z, radius);
     }
 
-    // Safely read string values from JSON.
-    private static String getString(JsonObject json, String key) {
-        return json.has(key) ? Objects.requireNonNull(json.get(key).getAsString()) : null;
-    }
-
-    // Safely read resource locations from JSON.
-    private static ResourceLocation getResource(JsonObject json, String key) {
-        if (!json.has(key)) {
-            return null;
-        }
-        return ResourceLocation.tryParse(Objects.requireNonNull(json.get(key).getAsString()));
-    }
 }
 
 

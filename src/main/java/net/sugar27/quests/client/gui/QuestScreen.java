@@ -19,6 +19,7 @@ import net.sugar27.quests.quest.QuestDefinition;
 import net.sugar27.quests.quest.QuestObjective;
 import net.sugar27.quests.quest.QuestProgress;
 import net.sugar27.quests.quest.QuestReward;
+import net.sugar27.quests.quest.QuestTypes;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
@@ -34,6 +35,12 @@ public class QuestScreen extends Screen {
     private static final int START_BUTTON_WIDTH = 90;
     private static final int START_BUTTON_HEIGHT = 20;
     private static final int START_BUTTON_Y_OFFSET = 42;
+    private static final int LIST_X = 20;
+    private static final int LIST_WIDTH = 180;
+    private static final int LIST_HIGHLIGHT_PAD = 2;
+    private static final int LIST_HEADER_STRIPE_WIDTH = 2;
+    private static final int LIST_TOP_BASE_Y = 50;
+    private static final int LIST_BOTTOM_PADDING = 20;
     private static final float HEADER_HEIGHT_SCALE = 1.5f;
     private static final Component HIDDEN_TEXT = Component.translatable("screen.shuga_quests.hidden");
 
@@ -187,7 +194,7 @@ public class QuestScreen extends Screen {
         Font font = Objects.requireNonNull(this.font);
         graphics.drawCenteredString(font, Objects.requireNonNull(this.title), this.width / 2, 6, 0xFFFFFFFF);
 
-        int listX = 20;
+        int listX = LIST_X;
         float titleScale = getListTitleScale(font);
         int lineHeight = getListLineHeight(font);
         int listY = getListTopY(font);
@@ -226,8 +233,8 @@ public class QuestScreen extends Screen {
             boolean isSelected = quest.id().equals(selectedQuestId);
             boolean isActive = quest.id().equals(activeQuestId);
             if (isSelected) {
-                int highlightLeft = listX - 2;
-                int highlightRight = listX + 178;
+                int highlightLeft = listX - LIST_HIGHLIGHT_PAD;
+                int highlightRight = listX + LIST_WIDTH - LIST_HIGHLIGHT_PAD;
                 graphics.fill(highlightLeft, y, highlightRight, y + lineHeight - 1, 0x402D3446);
             }
             int color = isSelected
@@ -353,7 +360,7 @@ public class QuestScreen extends Screen {
         List<QuestDefinition> completeQuests = new ArrayList<>();
         int dailyTotal = 0;
         for (QuestDefinition quest : questDefinitions.values()) {
-            boolean isDailyQuest = "daily".equalsIgnoreCase(quest.type());
+            boolean isDailyQuest = QuestTypes.DAILY.equalsIgnoreCase(quest.type());
             boolean isSelectedDaily = dailyQuestIds.contains(quest.id());
             boolean includeQuest = false;
             if (showDailyOnly) {
@@ -386,8 +393,8 @@ public class QuestScreen extends Screen {
                 dailyTotal > 0 && dailyQuests.isEmpty() ? Component.translatable("screen.shuga_quests.list.daily_complete") : null);
         addSection(Component.translatable("screen.shuga_quests.list.incomplete"), incompleteQuests);
         addSection(Component.translatable("screen.shuga_quests.list.complete"), completeQuests);
-        maxScrollOffset = Math.max(0, listEntries.size() - getVisibleListLines(getListTopY(Objects.requireNonNull(this.font)),
-                getListLineHeight(Objects.requireNonNull(this.font))));
+        Font font = Objects.requireNonNull(this.font);
+        maxScrollOffset = Math.max(0, listEntries.size() - getVisibleListLines(getListTopY(font), getListLineHeight(font)));
         scrollOffset = Math.min(scrollOffset, maxScrollOffset);
         if (!filteredQuests.isEmpty() && (selectedQuestId.isEmpty() || !QuestClientState.getQuestDefinitions().containsKey(selectedQuestId))) {
             selectedQuestId = filteredQuests.get(0).id();
@@ -398,12 +405,12 @@ public class QuestScreen extends Screen {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         Font font = Objects.requireNonNull(this.font);
-        int listX = 20;
+        int listX = LIST_X;
         int listY = getListTopY(font);
         int lineHeight = getListLineHeight(font);
         int visibleLines = getVisibleListLines(listY, lineHeight);
         int listBottom = listY + visibleLines * lineHeight;
-        if (mouseX >= listX && mouseX <= listX + 180 && mouseY >= listY && mouseY < listBottom) {
+        if (mouseX >= listX && mouseX <= listX + LIST_WIDTH && mouseY >= listY && mouseY < listBottom) {
             int index = (int) ((mouseY - listY) / lineHeight) + scrollOffset;
             if (index >= 0 && index < listEntries.size()) {
                 QuestListEntry entry = listEntries.get(index);
@@ -421,13 +428,13 @@ public class QuestScreen extends Screen {
         if (listEntries.isEmpty()) {
             return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
         }
-        int listX = 20;
+        int listX = LIST_X;
         int listY = getListTopY(font);
         Font font = Objects.requireNonNull(this.font);
         int lineHeight = getListLineHeight(font);
         int visibleLines = getVisibleListLines(listY, lineHeight);
         int listBottom = listY + visibleLines * lineHeight;
-        if (mouseX < listX || mouseX > listX + 180 || mouseY < listY || mouseY >= listBottom) {
+        if (mouseX < listX || mouseX > listX + LIST_WIDTH || mouseY < listY || mouseY >= listBottom) {
             return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
         }
         int direction = (int) Math.signum(scrollY);
@@ -684,13 +691,13 @@ public class QuestScreen extends Screen {
     }
 
     private int getVisibleListLines(int listY, int lineHeight) {
-        int listHeight = Math.max(0, this.height - listY - 20);
+        int listHeight = Math.max(0, this.height - listY - LIST_BOTTOM_PADDING);
         int lines = listHeight / Math.max(1, lineHeight);
         return Math.max(1, lines);
     }
 
     private int getListTopY(Font font) {
-        int baseListY = 50;
+        int baseListY = LIST_TOP_BASE_Y;
         int lineHeight = getListLineHeight(font);
         return baseListY + getHeaderHeight(lineHeight);
     }
@@ -764,14 +771,14 @@ public class QuestScreen extends Screen {
 
     private void drawSectionHeader(GuiGraphics graphics, Font font, int listX, int y, int lineHeight, float titleScale,
                                    Component header, boolean sticky) {
-        int left = listX - 2;
-        int right = listX + 178;
+        int left = listX - LIST_HIGHLIGHT_PAD;
+        int right = listX + LIST_WIDTH - LIST_HIGHLIGHT_PAD;
         int height = getHeaderHeight(lineHeight);
         int background = sticky ? 0x90303030 : 0x80202020;
         int textColor = 0xFFAEDCFF;
         int textIndent = 4;
         graphics.fill(left, y, right, y + height - 1, background);
-        graphics.fill(left, y, left + 2, y + height - 1, 0xFF6FB6FF);
+        graphics.fill(left, y, left + LIST_HEADER_STRIPE_WIDTH, y + height - 1, 0xFF6FB6FF);
         int scaledLineHeight = (int) Math.ceil(font.lineHeight * titleScale);
         int textY = y + (height - scaledLineHeight) / 2;
         graphics.pose().pushMatrix();

@@ -24,6 +24,7 @@ import javax.annotation.Nonnull;
 // Manages per-player quest progress persistence and updates.
 public final class QuestProgressManager {
     private static final String DATA_NAME = "shuga_quests_progress";
+    private static final String EMPTY_QUEST_ID = "";
 
     // Update quest progress based on an event context.
     public void handleEvent(ServerPlayer player, QuestEventContext context) {
@@ -39,7 +40,7 @@ public final class QuestProgressManager {
 
         QuestProgressData data = QuestProgressData.get(server.overworld());
         String activeQuestId = data.getActiveQuestId(player.getUUID());
-        if (activeQuestId == null || activeQuestId.isEmpty()) {
+        if (isBlankQuestId(activeQuestId)) {
             return;
         }
         boolean dirty = false;
@@ -81,8 +82,8 @@ public final class QuestProgressManager {
                 if (!progress.isCompleted() && isQuestComplete(quest, progress)) {
                     progress.markCompleted();
                     if (quest.id().equals(activeQuestId)) {
-                        data.setActiveQuestId(player.getUUID(), "");
-                        activeQuestId = "";
+                        clearActiveQuest(data, player.getUUID());
+                        activeQuestId = EMPTY_QUEST_ID;
                     }
                     if (!progress.rewardsGranted()) {
                         grantRewards(player, quest, progress);
@@ -208,13 +209,13 @@ public final class QuestProgressManager {
         }
         QuestProgressData data = QuestProgressData.get(server.overworld());
         String activeQuestId = data.getActiveQuestId(player.getUUID());
-        if (questId == null || questId.isEmpty()) {
+        if (isBlankQuestId(questId)) {
             data.getPlayerProgress(player.getUUID()).clear();
-            data.setActiveQuestId(player.getUUID(), "");
+            clearActiveQuest(data, player.getUUID());
         } else {
             data.getPlayerProgress(player.getUUID()).remove(questId);
             if (questId.equals(activeQuestId)) {
-                data.setActiveQuestId(player.getUUID(), "");
+                clearActiveQuest(data, player.getUUID());
             }
         }
         data.setDirty();
@@ -233,7 +234,7 @@ public final class QuestProgressManager {
         }
         QuestProgressData data = QuestProgressData.get(server.overworld());
         String activeQuestId = data.getActiveQuestId(player.getUUID());
-        boolean isAlreadyActive = activeQuestId != null && !activeQuestId.isEmpty() && activeQuestId.equals(quest.id());
+        boolean isAlreadyActive = hasQuestId(activeQuestId) && activeQuestId.equals(quest.id());
         if (!isAlreadyActive && !arePrerequisitesMet(player.getUUID(), quest, data)) {
             return;
         }
@@ -241,10 +242,10 @@ public final class QuestProgressManager {
         if (progress.isCompleted() && !quest.repeatable()) {
             return;
         }
-        boolean switchedQuest = activeQuestId != null && !activeQuestId.isEmpty() && !activeQuestId.equals(quest.id());
+        boolean switchedQuest = hasQuestId(activeQuestId) && !activeQuestId.equals(quest.id());
         if (switchedQuest) {
             data.getPlayerProgress(player.getUUID()).remove(activeQuestId);
-            data.setActiveQuestId(player.getUUID(), "");
+            clearActiveQuest(data, player.getUUID());
         }
         data.setActiveQuestId(player.getUUID(), quest.id());
         data.setDirty();
@@ -285,7 +286,7 @@ public final class QuestProgressManager {
      */
     public void stopQuest(ServerPlayer player, String questId) {
         MinecraftServer server = player.getServer();
-        if (server == null || questId == null || questId.isEmpty()) {
+        if (server == null || isBlankQuestId(questId)) {
             return;
         }
         QuestDefinition quest = QuestManager.get().getQuest(questId);
@@ -298,9 +299,21 @@ public final class QuestProgressManager {
             return;
         }
         data.getPlayerProgress(player.getUUID()).remove(quest.id());
-        data.setActiveQuestId(player.getUUID(), "");
+        clearActiveQuest(data, player.getUUID());
         data.setDirty();
         syncFull(player);
+    }
+
+    private static boolean isBlankQuestId(String questId) {
+        return questId == null || questId.isEmpty();
+    }
+
+    private static boolean hasQuestId(String questId) {
+        return !isBlankQuestId(questId);
+    }
+
+    private static void clearActiveQuest(QuestProgressData data, UUID playerId) {
+        data.setActiveQuestId(playerId, EMPTY_QUEST_ID);
     }
 
     // Persistent saved data for all player progress.

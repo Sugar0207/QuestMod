@@ -30,7 +30,7 @@ public record QuestDefinition(
         QuestCategory category = QuestCategory.fromString(
                 json.has("category") ? Objects.requireNonNull(json.get("category").getAsString()) : null
         );
-        String type = json.has("type") ? Objects.requireNonNull(json.get("type").getAsString()) : "normal";
+        String type = json.has("type") ? Objects.requireNonNull(json.get("type").getAsString()) : QuestTypes.NORMAL;
         boolean repeatable = json.has("repeatable") && json.get("repeatable").getAsBoolean();
         List<String> prerequisites = new ArrayList<>();
         if (json.has("prerequisites")) {

@@ -24,6 +24,7 @@ import java.util.Objects;
 
 // Subscribes to NeoForge events and updates quest progress.
 public class QuestEventHandler {
+    private static final int LOCATION_CHECK_INTERVAL_TICKS = 40;
     private final QuestProgressManager progressManager = new QuestProgressManager();
 
     // Load quest definitions when the server starts.
@@ -57,8 +58,7 @@ public class QuestEventHandler {
             return;
         }
         ResourceLocation blockId = BuiltInRegistries.BLOCK.getKey(Objects.requireNonNull(event.getState().getBlock()));
-        QuestEventContext context = new QuestEventContext(player, QuestCriteriaType.BLOCK_BROKEN, blockId, 1, player.level(), player.getX(), player.getY(), player.getZ());
-        progressManager.handleEvent(player, context);
+        handleContext(player, QuestCriteriaType.BLOCK_BROKEN, blockId, 1);
     }
 
     // Handle item pickup events.
@@ -71,8 +71,7 @@ public class QuestEventHandler {
         var currentStack = event.getCurrentStack();
         ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(Objects.requireNonNull(originalStack.getItem()));
         int count = Math.max(1, originalStack.getCount() - currentStack.getCount());
-        QuestEventContext context = new QuestEventContext(player, QuestCriteriaType.ITEM_ACQUIRED, itemId, count, player.level(), player.getX(), player.getY(), player.getZ());
-        progressManager.handleEvent(player, context);
+        handleContext(player, QuestCriteriaType.ITEM_ACQUIRED, itemId, count);
     }
 
     // Handle item crafted events.
@@ -83,8 +82,7 @@ public class QuestEventHandler {
         }
         ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(Objects.requireNonNull(event.getCrafting().getItem()));
         int count = event.getCrafting().getCount();
-        QuestEventContext context = new QuestEventContext(player, QuestCriteriaType.ITEM_CRAFTED, itemId, count, player.level(), player.getX(), player.getY(), player.getZ());
-        progressManager.handleEvent(player, context);
+        handleContext(player, QuestCriteriaType.ITEM_CRAFTED, itemId, count);
     }
 
     // Handle entity kill events.
@@ -94,8 +92,7 @@ public class QuestEventHandler {
             return;
         }
         ResourceLocation entityId = BuiltInRegistries.ENTITY_TYPE.getKey(Objects.requireNonNull(event.getEntity().getType()));
-        QuestEventContext context = new QuestEventContext(player, QuestCriteriaType.ENTITY_KILLED, entityId, 1, player.level(), player.getX(), player.getY(), player.getZ());
-        progressManager.handleEvent(player, context);
+        handleContext(player, QuestCriteriaType.ENTITY_KILLED, entityId, 1);
     }
 
     // Handle location checks on a periodic player tick.
@@ -104,13 +101,17 @@ public class QuestEventHandler {
         if (!(event.getEntity() instanceof ServerPlayer player)) {
             return;
         }
-        if (player.tickCount % 40 != 0) {
+        if (player.tickCount % LOCATION_CHECK_INTERVAL_TICKS != 0) {
             return;
         }
         if (QuestManager.get().getQuestsByCriteriaType(QuestCriteriaType.LOCATION_REACHED).isEmpty()) {
             return;
         }
-        QuestEventContext context = new QuestEventContext(player, QuestCriteriaType.LOCATION_REACHED, null, 1, player.level(), player.getX(), player.getY(), player.getZ());
+        handleContext(player, QuestCriteriaType.LOCATION_REACHED, null, 1);
+    }
+
+    private void handleContext(ServerPlayer player, QuestCriteriaType type, ResourceLocation targetId, int count) {
+        QuestEventContext context = new QuestEventContext(player, type, targetId, count, player.level(), player.getX(), player.getY(), player.getZ());
         progressManager.handleEvent(player, context);
     }
 }

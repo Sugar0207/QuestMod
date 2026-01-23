@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -79,7 +80,7 @@ public final class QuestManager {
                                 quest.titleKey(),
                                 quest.descriptionKey(),
                                 quest.category(),
-                                "daily",
+                                QuestTypes.DAILY,
                                 quest.repeatable(),
                                 quest.prerequisites(),
                                 quest.objectives(),
@@ -102,7 +103,7 @@ public final class QuestManager {
             criteriaIndex.put(type, new ArrayList<>());
         }
         for (QuestDefinition quest : quests.values()) {
-            var usedTypes = new java.util.HashSet<QuestCriteriaType>();
+            var usedTypes = new HashSet<QuestCriteriaType>();
             for (QuestObjective objective : quest.objectives()) {
                 for (QuestCriteria criteria : objective.criteria()) {
                     if (usedTypes.add(criteria.type())) {

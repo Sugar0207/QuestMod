@@ -21,19 +21,15 @@ public record QuestStopPacket(String questId) implements CustomPacketPayload {
             StreamCodec.of(QuestStopPacket::write, QuestStopPacket::read);
 
     private static void write(RegistryFriendlyByteBuf buf, QuestStopPacket payload) {
-        buf.writeUtf(Objects.requireNonNullElse(payload.questId, ""));
+        QuestPacketUtil.writeQuestId(buf, payload.questId);
     }
 
     private static QuestStopPacket read(RegistryFriendlyByteBuf buf) {
-        return new QuestStopPacket(buf.readUtf());
+        return new QuestStopPacket(QuestPacketUtil.readQuestId(buf));
     }
 
     public static void handle(QuestStopPacket payload, IPayloadContext context) {
-        context.enqueueWork(() -> {
-            if (context.player() instanceof net.minecraft.server.level.ServerPlayer player) {
-                new QuestProgressManager().stopQuest(player, payload.questId());
-            }
-        });
+        QuestPacketUtil.withServerPlayer(context, player -> new QuestProgressManager().stopQuest(player, payload.questId()));
     }
 
     @Override

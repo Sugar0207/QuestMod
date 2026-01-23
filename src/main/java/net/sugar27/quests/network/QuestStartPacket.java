@@ -21,19 +21,15 @@ public record QuestStartPacket(String questId) implements CustomPacketPayload {
             StreamCodec.of(QuestStartPacket::write, QuestStartPacket::read);
 
     private static void write(RegistryFriendlyByteBuf buf, QuestStartPacket payload) {
-        buf.writeUtf(Objects.requireNonNullElse(payload.questId, ""));
+        QuestPacketUtil.writeQuestId(buf, payload.questId);
     }
 
     private static QuestStartPacket read(RegistryFriendlyByteBuf buf) {
-        return new QuestStartPacket(buf.readUtf());
+        return new QuestStartPacket(QuestPacketUtil.readQuestId(buf));
     }
 
     public static void handle(QuestStartPacket payload, IPayloadContext context) {
-        context.enqueueWork(() -> {
-            if (context.player() instanceof net.minecraft.server.level.ServerPlayer player) {
-                new QuestProgressManager().startQuest(player, payload.questId());
-            }
-        });
+        QuestPacketUtil.withServerPlayer(context, player -> new QuestProgressManager().startQuest(player, payload.questId()));
     }
 
     @Override

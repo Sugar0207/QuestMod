@@ -16,6 +16,9 @@ import java.util.Objects;
 
 // Renders lightweight quest update notifications on the HUD.
 public final class QuestHudOverlay {
+    private static final String COMPLETED_KEY = "hud.shuga_quests.completed";
+    private static final String UPDATED_KEY = "hud.shuga_quests.updated";
+
     // Utility class; no instantiation.
     private QuestHudOverlay() {
     }
@@ -42,8 +45,8 @@ public final class QuestHudOverlay {
                 : Component.literal(Objects.requireNonNull(quest.titleKey()));
 
         Component prefix = notification.type() == QuestSyncPacket.NotificationType.COMPLETED
-                ? Component.translatable(Objects.requireNonNull("hud.shuga_quests.completed"))
-                : Component.translatable(Objects.requireNonNull("hud.shuga_quests.updated"));
+                ? Component.translatable(COMPLETED_KEY)
+                : Component.translatable(UPDATED_KEY);
 
         GuiGraphics graphics = event.getGuiGraphics();
         int x = minecraft.getWindow().getGuiScaledWidth() - 10;

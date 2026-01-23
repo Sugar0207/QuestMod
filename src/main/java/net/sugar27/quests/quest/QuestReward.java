@@ -12,6 +12,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.ItemStack;
+import net.sugar27.quests.util.QuestJsonUtil;
 
 import java.util.Objects;
 
@@ -29,15 +30,15 @@ public record QuestReward(
 ) {
     // Parse a reward entry from JSON.
     public static QuestReward fromJson(JsonObject json) {
-        QuestRewardType type = QuestRewardType.fromString(getString(json, "type"));
-        ResourceLocation item = getResource(json, "item");
+        QuestRewardType type = QuestRewardType.fromString(QuestJsonUtil.getString(json, "type"));
+        ResourceLocation item = QuestJsonUtil.getResource(json, "item");
         int count = json.has("count") ? json.get("count").getAsInt() : 1;
         int amount = json.has("amount") ? json.get("amount").getAsInt() : 0;
-        ResourceLocation effect = getResource(json, "effect");
+        ResourceLocation effect = QuestJsonUtil.getResource(json, "effect");
         int duration = json.has("duration") ? json.get("duration").getAsInt() : 0;
         int amplifier = json.has("amplifier") ? json.get("amplifier").getAsInt() : 0;
-        String command = getString(json, "command");
-        ResourceLocation advancement = getResource(json, "id");
+        String command = QuestJsonUtil.getString(json, "command");
+        ResourceLocation advancement = QuestJsonUtil.getResource(json, "id");
         return new QuestReward(type, item, count, amount, effect, duration, amplifier, command, advancement);
     }
 
@@ -159,19 +160,6 @@ public record QuestReward(
         for (String criterion : progress.getRemainingCriteria()) {
             player.getAdvancements().award(advancementHolder, Objects.requireNonNull(criterion));
         }
-    }
-
-    // Safely read string values from JSON.
-    private static String getString(JsonObject json, String key) {
-        return json.has(key) ? Objects.requireNonNull(json.get(key).getAsString()) : null;
-    }
-
-    // Safely read resource locations from JSON.
-    private static ResourceLocation getResource(JsonObject json, String key) {
-        if (!json.has(key)) {
-            return null;
-        }
-        return ResourceLocation.tryParse(Objects.requireNonNull(json.get(key).getAsString()));
     }
 
     private Component getItemName() {

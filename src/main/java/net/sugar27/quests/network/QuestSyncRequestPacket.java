@@ -23,11 +23,9 @@ public record QuestSyncRequestPacket() implements CustomPacketPayload {
 
     // Handle server-side sync request.
     public static void handle(QuestSyncRequestPacket payload, IPayloadContext context) {
-        context.enqueueWork(() -> {
-            if (context.player() instanceof net.minecraft.server.level.ServerPlayer player) {
-                ShugaQuestsMod.LOGGER.info("Quest sync request received from {}", player.getName().getString());
-                new QuestProgressManager().syncFull(player);
-            }
+        QuestPacketUtil.withServerPlayer(context, player -> {
+            ShugaQuestsMod.LOGGER.info("Quest sync request received from {}", player.getName().getString());
+            new QuestProgressManager().syncFull(player);
         });
     }
 

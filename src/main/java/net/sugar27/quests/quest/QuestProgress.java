@@ -53,12 +53,7 @@ public class QuestProgress {
 
     // Get or create progress for a specific objective.
     public ObjectiveProgress getOrCreateObjective(String objectiveId, int criteriaCount) {
-        ObjectiveProgress progress = objectives.get(objectiveId);
-        if (progress == null) {
-            progress = new ObjectiveProgress(objectiveId, criteriaCount);
-            objectives.put(objectiveId, progress);
-        }
-        return progress;
+        return objectives.computeIfAbsent(objectiveId, id -> new ObjectiveProgress(id, criteriaCount));
     }
 
     // Get objective progress for lookup.

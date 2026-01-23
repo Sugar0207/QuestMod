@@ -36,7 +36,7 @@ public final class QuestCriteriaHandlers {
 
     // Match criteria that use a target id (item, block, entity).
     private static int matchTarget(QuestCriteria criteria, QuestEventContext context) {
-        if (criteria.type() != context.type()) {
+        if (!matchesType(criteria, context)) {
             return 0;
         }
         ResourceLocation target = context.targetId();
@@ -54,16 +54,17 @@ public final class QuestCriteriaHandlers {
 
     // Match criteria that require a location check.
     private static int matchLocation(QuestCriteria criteria, QuestEventContext context) {
-        if (criteria.type() != context.type()) {
+        if (!matchesType(criteria, context)) {
             return 0;
         }
-        if (criteria.dimension() != null && context.level() != null) {
-            if (!criteria.dimension().equals(context.level().dimension().location())) {
+        var level = context.level();
+        if (criteria.dimension() != null && level != null) {
+            if (!criteria.dimension().equals(level.dimension().location())) {
                 return 0;
             }
         }
-        if (criteria.biome() != null && context.level() != null) {
-            var biomeKey = context.level().getBiome(BlockPos.containing(context.x(), context.y(), context.z())).unwrapKey();
+        if (criteria.biome() != null && level != null) {
+            var biomeKey = level.getBiome(BlockPos.containing(context.x(), context.y(), context.z())).unwrapKey();
             if (biomeKey.isEmpty() || !criteria.biome().equals(biomeKey.get().location())) {
                 return 0;
             }
@@ -86,10 +87,18 @@ public final class QuestCriteriaHandlers {
 
     // Placeholder for custom events in future expansions.
     private static int matchCustom(QuestCriteria criteria, QuestEventContext context) {
-        if (criteria.type() != context.type()) {
+        if (!matchesType(criteria, context)) {
             return 0;
         }
-        return Math.max(1, context.count());
+        return normalizeCount(context.count());
+    }
+
+    private static boolean matchesType(QuestCriteria criteria, QuestEventContext context) {
+        return criteria.type() == context.type();
+    }
+
+    private static int normalizeCount(int count) {
+        return Math.max(1, count);
     }
 }
 
