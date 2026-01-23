@@ -14,12 +14,14 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.sugar27.quests.ShugaQuestsMod;
 import net.sugar27.quests.config.QuestConfigPaths;
+import net.sugar27.quests.config.QuestServerConfig;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.time.LocalDate;
-import java.time.ZoneOffset;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -72,8 +74,8 @@ public final class DailyQuestManager {
     public void ensureDailySelection(MinecraftServer server) {
         ServerLevel level = server.overworld();
         DailyQuestData data = DailyQuestData.get(level);
-        String today = LocalDate.now(ZoneOffset.UTC).toString();
-        if (!today.equals(data.date)) {
+        String rollDate = getRollDate().toString();
+        if (!rollDate.equals(data.date)) {
             reroll(server, false);
         }
     }
@@ -85,11 +87,11 @@ public final class DailyQuestManager {
         }
         ServerLevel level = server.overworld();
         DailyQuestData data = DailyQuestData.get(level);
-        String today = LocalDate.now(ZoneOffset.UTC).toString();
-        if (!force && today.equals(data.date)) {
+        String rollDate = getRollDate().toString();
+        if (!force && rollDate.equals(data.date)) {
             return;
         }
-        data.date = today;
+        data.date = rollDate;
         data.questIds.clear();
 
         List<QuestDefinition> shuffled = new ArrayList<>(dailyCandidates);
@@ -104,6 +106,16 @@ public final class DailyQuestManager {
     // Get the current daily quest ids.
     public List<String> getDailyQuestIds(MinecraftServer server) {
         return DailyQuestData.get(server.overworld()).questIds;
+    }
+
+    private static LocalDate getRollDate() {
+        ZonedDateTime now = ZonedDateTime.now(ZoneId.systemDefault());
+        LocalDate date = now.toLocalDate();
+        int rerollHour = QuestServerConfig.dailyRerollHour();
+        if (now.getHour() < rerollHour) {
+            date = date.minusDays(1);
+        }
+        return date;
     }
 
     // Saved data container for daily quest selection.

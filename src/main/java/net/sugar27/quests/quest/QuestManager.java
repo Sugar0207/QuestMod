@@ -81,6 +81,7 @@ public final class QuestManager {
                                 quest.category(),
                                 "daily",
                                 quest.repeatable(),
+                                quest.prerequisites(),
                                 quest.objectives(),
                                 quest.rewards()
                         );

@@ -25,7 +25,7 @@ public final class NetworkHandler {
 
     // Register client-bound payloads.
     public static void registerPayloads(RegisterPayloadHandlersEvent event) {
-        PayloadRegistrar registrar = event.registrar(ShugaQuestsMod.MODID).versioned("1");
+        PayloadRegistrar registrar = event.registrar(ShugaQuestsMod.MODID).versioned("2");
         registrar.playToClient(
                 Objects.requireNonNull(QuestSyncPacket.TYPE),
                 Objects.requireNonNull(QuestSyncPacket.STREAM_CODEC),
@@ -97,6 +97,7 @@ public final class NetworkHandler {
                     definition.category(),
                     definition.type(),
                     definition.repeatable(),
+                    definition.prerequisites(),
                     definition.objectives(),
                     definition.rewards()
             ));

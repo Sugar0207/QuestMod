@@ -18,6 +18,7 @@ public record QuestDefinition(
         QuestCategory category,
         String type,
         boolean repeatable,
+        List<String> prerequisites,
         List<QuestObjective> objectives,
         List<QuestReward> rewards
 ) {
@@ -31,6 +32,11 @@ public record QuestDefinition(
         );
         String type = json.has("type") ? Objects.requireNonNull(json.get("type").getAsString()) : "normal";
         boolean repeatable = json.has("repeatable") && json.get("repeatable").getAsBoolean();
+        List<String> prerequisites = new ArrayList<>();
+        if (json.has("prerequisites")) {
+            JsonArray array = json.getAsJsonArray("prerequisites");
+            array.forEach(entry -> prerequisites.add(entry.getAsString().replace('/', '.')));
+        }
 
         List<QuestObjective> objectives = new ArrayList<>();
         if (json.has("objectives")) {
@@ -44,7 +50,7 @@ public record QuestDefinition(
             array.forEach(entry -> rewards.add(QuestReward.fromJson(entry.getAsJsonObject())));
         }
 
-        return new QuestDefinition(id, titleKey, descriptionKey, category, type, repeatable, objectives, rewards);
+        return new QuestDefinition(id, titleKey, descriptionKey, category, type, repeatable, prerequisites, objectives, rewards);
     }
 
     // Serialize this definition into a network buffer.
@@ -55,6 +61,10 @@ public record QuestDefinition(
         buf.writeEnum(Objects.requireNonNull(category));
         buf.writeUtf(Objects.requireNonNull(Objects.requireNonNullElse(type, "")));
         buf.writeBoolean(repeatable);
+        buf.writeVarInt(prerequisites.size());
+        for (String prereq : prerequisites) {
+            buf.writeUtf(Objects.requireNonNull(prereq));
+        }
         buf.writeVarInt(objectives.size());
         for (QuestObjective objective : objectives) {
             objective.writeToBuf(buf);
@@ -73,6 +83,11 @@ public record QuestDefinition(
         QuestCategory category = buf.readEnum(QuestCategory.class);
         String type = buf.readUtf();
         boolean repeatable = buf.readBoolean();
+        int prerequisiteSize = buf.readVarInt();
+        List<String> prerequisites = new ArrayList<>();
+        for (int i = 0; i < prerequisiteSize; i++) {
+            prerequisites.add(buf.readUtf());
+        }
         int objectiveSize = buf.readVarInt();
         List<QuestObjective> objectives = new ArrayList<>();
         for (int i = 0; i < objectiveSize; i++) {
@@ -83,7 +98,7 @@ public record QuestDefinition(
         for (int i = 0; i < rewardSize; i++) {
             rewards.add(QuestReward.readFromBuf(buf));
         }
-        return new QuestDefinition(id, titleKey, descriptionKey, category, type, repeatable, objectives, rewards);
+        return new QuestDefinition(id, titleKey, descriptionKey, category, type, repeatable, prerequisites, objectives, rewards);
     }
 }
 

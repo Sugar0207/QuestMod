@@ -12,6 +12,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
 import net.sugar27.quests.config.QuestClientConfig;
+import net.sugar27.quests.config.QuestServerConfig;
 import net.sugar27.quests.command.QuestAdminCommand;
 import net.sugar27.quests.event.QuestEventHandler;
 import net.sugar27.quests.network.NetworkHandler;
@@ -31,6 +32,7 @@ public class ShugaQuestsMod {
         modEventBus.addListener(NetworkHandler::registerPayloads);
         modEventBus.addListener(this::commonSetup);
         modContainer.registerConfig(ModConfig.Type.CLIENT, QuestClientConfig.SPEC);
+        modContainer.registerConfig(ModConfig.Type.SERVER, QuestServerConfig.SPEC);
 
         // Register server/gameplay events and admin commands.
         NeoForge.EVENT_BUS.register(new QuestEventHandler());
